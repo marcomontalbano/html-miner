@@ -16,14 +16,85 @@ describe('htmlMiner', () => {
         });
     })
 
-    it('should return a string for a tag (e.g. <h1>)', () => {
-        let text = htmlMiner(html, 'h1');
-        assert.equal(text, 'Hello, world!');
+    //
+    describe('should throw an exception', () => {
+
+        it('given a number', () => {
+            assert.throws(() => { htmlMiner(html, 4) });
+        });
+
+        it('given a boolean', () => {
+            assert.throws(() => { htmlMiner(html, true) });
+        });
+
     });
 
-    it('should return an array of strings for a tag (e.g. <h2>)', () => {
-        let text = htmlMiner(html, 'h2');
-        assert.deepEqual(text, Array(3).fill('Heading'));
+    //
+    describe('should returns a string', () => {
+
+        it('given a string (e.g. \'h1\')', () => {
+            let actual = htmlMiner(html, 'h1');
+            assert.equal(actual, 'Hello, world!');
+        });
+
+        it('given a string (e.g. \'.nav-item.active > a\')', () => {
+            let actual = htmlMiner(html, '.nav-item.active > a');
+            assert.equal(actual, 'Home (current)');
+        });
+
+    });
+
+    //
+    describe('should returns an array', () => {
+
+        it('given a string (e.g. \'h2\')', () => {
+            let actual = htmlMiner(html, 'h2');
+            assert.deepStrictEqual(actual, Array(3).fill('Heading'));
+        });
+
+        it('given an array', () => {
+            let actual = htmlMiner(html, ['h1', 'h2']);
+
+            assert.deepStrictEqual(actual, [
+                'Hello, world!',
+                Array(3).fill('Heading')
+            ]);
+        });
+
+    });
+
+    //
+    describe('should returns an object', () => {
+
+        it('given an object', () => {
+            let actual = htmlMiner(html, {
+                title    : 'h1',
+                headings : 'h2'
+            });
+
+            assert.deepStrictEqual(actual, {
+                title    : 'Hello, world!',
+                headings : Array(3).fill('Heading')
+            });
+        });
+
+    });
+
+    //
+    describe('given an object', () => {
+
+        it('should execute the defined callback', () => {
+            let actual = htmlMiner(html, {
+                greet : ($, previousData) => {
+                    return 'Hello, world!';
+                },
+            });
+
+            assert.deepStrictEqual(actual, {
+                greet : 'Hello, world!'
+            });
+        });
+
     });
 
 });
