@@ -1,0 +1,29 @@
+{
+  "name": "html-miner",
+  "version": "0.0.1-beta-1",
+  "description": "A powerful miner who will scrape html pages for you. ` HTML Scraper ´",
+  "main": "index.js",
+  "repository": "https://github.com/marcomontalbano/html-miner.git",
+  "author": {
+    "name": "Marco Montalbano",
+    "email": "me@marcomontalbano.com",
+    "url": "https://marcomontalbano.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "node",
+    "scrape",
+    "html",
+    "html-scraper",
+    "scrape-html"
+  ],
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0"
+  }
+}
