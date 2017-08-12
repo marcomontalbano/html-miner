@@ -1,6 +1,6 @@
 {
   "name": "html-miner",
-  "version": "0.0.1-beta-2",
+  "version": "0.0.1-beta-3",
   "description": "A powerful miner who will scrape html pages for you. ` HTML Scraper ´",
   "main": "index.js",
   "repository": "https://github.com/marcomontalbano/html-miner.git",

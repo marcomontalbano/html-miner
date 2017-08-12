@@ -42,6 +42,14 @@ describe('htmlMiner', () => {
             assert.equal(actual, 'Home (current)');
         });
 
+        it('given a function', () => {
+            let actual = htmlMiner(html, ($) => {
+                $('.nav-item.active > a > span').remove();
+                return $('.nav-item.active > a').text().trim();
+            });
+            assert.equal(actual, 'Home');
+        });
+
     });
 
     //
