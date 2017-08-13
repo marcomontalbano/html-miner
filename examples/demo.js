@@ -16,10 +16,10 @@ fs.readFile(`${ __dirname }/../test/html/getbootstrap.html`, 'utf8', (err, data)
         },
         footer: {
             copyright: 'footer',
-            year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0] },
+            year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0]; },
         }
     });
 
-    console.dir(json, {depth: null, colors: true});
+    process.stdout.write( JSON.stringify(json) );
 
 });

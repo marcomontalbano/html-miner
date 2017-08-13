@@ -10,21 +10,21 @@ describe('htmlMiner', () => {
 
     before(function (done) {
         fs.readFile(`${ __dirname }/html/getbootstrap.html`, 'utf8', (err, data) => {
-            if (err) done(err);
+            if (err) { done(err); }
             html = data;
             done();
         });
-    })
+    });
 
     //
     describe('should throw an exception', () => {
 
         it('given a number', () => {
-            assert.throws(() => { htmlMiner(html, 4) });
+            assert.throws(() => { htmlMiner(html, 4); });
         });
 
         it('given a boolean', () => {
-            assert.throws(() => { htmlMiner(html, true) });
+            assert.throws(() => { htmlMiner(html, true); });
         });
 
     });
@@ -99,7 +99,7 @@ describe('htmlMiner', () => {
 
         it('should execute the defined callback', () => {
             let actual = htmlMiner(html, {
-                greet : $ => 'Hello, world!',
+                greet : ($) => 'Hello, world!',
             });
 
             assert.deepStrictEqual(actual, {

@@ -10,17 +10,17 @@ describe('htmlMiner • README.md', () => {
 
     before(function (done) {
         fs.readFile(`${ __dirname }/html/readme.md.html`, 'utf8', (err, data) => {
-            if (err) done(err);
+            if (err) { done(err); }
             html = data;
             done();
         });
-    })
+    });
 
     //
     it('the example should work', () => {
         let actual = htmlMiner(html, {
-            title: "h1",
-            h2: "h2",
+            title: 'h1',
+            h2: 'h2',
             articles: {
                 _each_: '.articles .article',
                 title: 'h2',
@@ -29,9 +29,9 @@ describe('htmlMiner • README.md', () => {
             footer: {
                 copyright: 'footer',
                 company: 'footer span',
-                year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0] },
+                year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0]; },
             },
-            greet: $ => { return 'Hi!' }
+            greet: ($) => { return 'Hi!'; }
         });
         assert.deepStrictEqual(actual, {
             title: 'Hello, world!',
