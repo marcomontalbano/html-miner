@@ -1,10 +1,10 @@
 'use strict';
 
-const htmlScraper = require('./lib/');
+const htmlScraper = require('../lib/');
 
 const fs = require('fs');
 
-fs.readFile(`${ __dirname }/test/html/getbootstrap.html`, 'utf8', (err, data) => {
+fs.readFile(`${ __dirname }/../test/html/getbootstrap.html`, 'utf8', (err, data) => {
 
     let json = htmlScraper(data, {
         title    : 'h1',
@@ -13,6 +13,10 @@ fs.readFile(`${ __dirname }/test/html/getbootstrap.html`, 'utf8', (err, data) =>
             _each_ : '.col-md-4',
             title  : 'h2',
             text   : 'p:first-of-type',
+        },
+        footer: {
+            copyright: 'footer',
+            year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0] },
         }
     });
 

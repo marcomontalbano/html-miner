@@ -19,58 +19,75 @@ npm i --save html-miner
 Example
 -------
 
-We have following html snippet and we want to fetch the `title`.
+We have following html snippet and we want to fetch some information.
 
 ```html
-<div class="jumbotron">
-    <div class="container">
-        <h1 class="display-3">Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+<h1>Hello, world!</h1>
+<div class="articles">
+    <div class="article">
+        <h2>Heading 1</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </div>
+    <div class="article">
+        <h2>Heading 2</h2>
+        <p>Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.</p>
+    </div>
+    <div class="article">
+        <h2>Heading 3</h2>
+        <p>Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.</p>
     </div>
 </div>
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>Heading</h2>
-            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-        </div>
-    </div>
-
-    <hr>
-
-    <footer>
-        <p>&copy; Company 2017</p>
-    </footer>
-</div>
+<footer>
+    <p>&copy; <span>Company</span> 2017</p>
+</footer>
 ```
 
 ```javascript
 const htmlMiner = require('html-miner');
 
 let json = htmlMiner(html, {
-    title : 'h1',
-    headings : 'h2',
-    greet : $ => { return 'Hi!' }
+    title: "h1",
+    h2: "h2",
+    articles: {
+        _each_: '.articles .article',
+        title: 'h2',
+        content: 'p',
+    },
+    footer: {
+        copyright: 'footer',
+        company: 'footer span',
+        year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0] },
+    },
+    greet: $ => { return 'Hi!' }
 });
 
 console.log( json );
+
 // {
-//     title : 'Hello, world!',
-//     headings : ['Heading', 'Heading', 'Heading'],
-//     greet : 'Hi!'
+//     title: 'Hello, world!',
+//     h2: ['Heading 1', 'Heading 2', 'Heading 3'],
+//     articles: [
+//         {
+//             title: 'Heading 1',
+//             content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//         },
+//         {
+//             title: 'Heading 2',
+//             content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.',
+//         },
+//         {
+//             title: 'Heading 3',
+//             content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.',
+//         }
+//     ],
+//     footer: {
+//         copyright: '© Company 2017',
+//         company: 'Company',
+//         year: '2017'
+//     },
+//     greet: 'Hi!'
 // }
+
 ```
 
 

@@ -107,11 +107,11 @@ describe('htmlMiner', () => {
             });
         });
 
-        it('should execute the defined callback using previousData', () => {
+        it('should execute the defined callback using scopeData', () => {
             let actual = htmlMiner(html, {
                 title : 'h1',
-                uppertitle : ($, previousData) => {
-                    return previousData.title.toUpperCase();
+                uppertitle : ($, scopeData) => {
+                    return scopeData.title.toUpperCase();
                 },
             });
 
