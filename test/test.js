@@ -77,12 +77,18 @@ describe('htmlMiner', () => {
         it('given an object', () => {
             let actual = htmlMiner(html, {
                 title    : 'h1',
-                headings : 'h2'
+                headings : 'h2',
+                footer   : {
+                    copyright : 'footer p'
+                }
             });
 
             assert.deepStrictEqual(actual, {
                 title    : 'Hello, world!',
-                headings : Array(3).fill('Heading')
+                headings : Array(3).fill('Heading'),
+                footer   : {
+                    copyright : '© Company 2017'
+                }
             });
         });
 
@@ -93,13 +99,56 @@ describe('htmlMiner', () => {
 
         it('should execute the defined callback', () => {
             let actual = htmlMiner(html, {
-                greet : ($, previousData) => {
-                    return 'Hello, world!';
-                },
+                greet : $ => 'Hello, world!',
             });
 
             assert.deepStrictEqual(actual, {
                 greet : 'Hello, world!'
+            });
+        });
+
+        it('should execute the defined callback using previousData', () => {
+            let actual = htmlMiner(html, {
+                title : 'h1',
+                uppertitle : ($, previousData) => {
+                    return previousData.title.toUpperCase();
+                },
+            });
+
+            assert.deepStrictEqual(actual, {
+                title : 'Hello, world!',
+                uppertitle : 'HELLO, WORLD!'
+            });
+        });
+
+        it('test \'_each_\' functionality', () => {
+            let actual = htmlMiner(html, {
+                title    : 'h1',
+                headings : 'h2',
+                articles : {
+                    _each_ : '.col-md-4',
+                    title  : 'h2',
+                    text   : 'p:first-of-type',
+                }
+            });
+
+            assert.deepStrictEqual(actual, {
+                title    : 'Hello, world!',
+                headings : Array(3).fill('Heading'),
+                articles : [
+                    {
+                        title : 'Heading',
+                        text  : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    },
+                    {
+                        title : 'Heading',
+                        text  : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    },
+                    {
+                        title : 'Heading',
+                        text  : 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
+                    }
+                ]
             });
         });
 
