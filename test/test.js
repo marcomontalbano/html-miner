@@ -9,7 +9,7 @@ describe('htmlMiner', function() {
     var html;
 
     before(function(done) {
-        fs.readFile(`${ __dirname }/html/getbootstrap.html`, 'utf8', function(err, data) {
+        fs.readFile(__dirname + '/html/getbootstrap.html', 'utf8', function(err, data) {
             if (err) { done(err); }
             html = data;
             done();

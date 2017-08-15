@@ -10,7 +10,7 @@ describe('htmlMiner • README.md', function() {
     var html = '<div class="title">Hello <span>Marco</span>!</div>';
 
     before(function(done) {
-        fs.readFile(`${ __dirname }/html/readme.md.html`, 'utf8', function(err, data) {
+        fs.readFile(__dirname + '/html/readme.md.html', 'utf8', function(err, data) {
             if (err) { done(err); }
             exampleHTML = data;
             done();

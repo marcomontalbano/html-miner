@@ -1,18 +1,18 @@
 'use strict';
 
-const htmlScraper = require('../lib/');
+var htmlScraper = require('../lib/');
 
-const https = require('https');
+var https = require('https');
 
-const simpleRequest = (host, method, callback) => {
+var simpleRequest = function(host, method, callback) {
 
-    let html = '';
-    let req = https.request({host:host,method:method}, (res) => {
+    var html = '';
+    var req = https.request({host:host,method:method}, function(res) {
         res.setEncoding('utf8');
-        res.on('data', (chunk) => {
+        res.on('data', function(chunk) {
             html += chunk;
         });
-        res.on('end', () => {
+        res.on('end', function() {
             callback.apply(this, [html]);
         });
     });
@@ -25,21 +25,21 @@ const simpleRequest = (host, method, callback) => {
 
 };
 
-simpleRequest('marcomontalbano.com', 'GET', (html) => {
+simpleRequest('marcomontalbano.com', 'GET', function(html) {
 
-    let json = htmlScraper(html, {
+    var json = htmlScraper(html, {
         title: 'h1',
         links: {
             _each_: '.nav.navbar-nav li',
             text: 'a',
-            href: ($) => { return $('a').attr('href'); }
+            href: function($) { return $('a').attr('href'); }
         },
         portfolio: {
             _each_: '.portfolio',
             title: '.content .title',
             description: '.content .description',
             ribbon: '.ribbon',
-            image: ($) => { return $('img').attr('src'); }
+            image: function($) { return $('img').attr('src'); }
         }
     });
 
