@@ -1,7 +1,9 @@
 'use strict';
 
-var assert  = require('assert');
 var htmlMiner = require('../lib/');
+
+var chai = require('chai');
+var assert = chai.assert;
 var fs = require('fs');
 
 describe('htmlMiner • README.md', function() {
@@ -34,7 +36,7 @@ describe('htmlMiner • README.md', function() {
             },
             greet: function($) { return 'Hi!'; }
         });
-        assert.deepStrictEqual(actual, {
+        assert.deepEqual(actual, {
             title: 'Hello, world!',
             h2: ['Heading 1', 'Heading 2', 'Heading 3'],
             articles: [
@@ -72,7 +74,7 @@ describe('htmlMiner • README.md', function() {
 
     it('usage • array', function() {
         var actual = htmlMiner(html, ['.title', 'span']);
-        assert.deepStrictEqual(actual, ['Hello Marco!', 'Marco']);
+        assert.deepEqual(actual, ['Hello Marco!', 'Marco']);
     });
 
     it('usage • object', function() {
@@ -81,7 +83,7 @@ describe('htmlMiner • README.md', function() {
             who: 'span'
         });
 
-        assert.deepStrictEqual(actual, {
+        assert.deepEqual(actual, {
             title: 'Hello Marco!',
             who: 'Marco'
         });
@@ -94,7 +96,7 @@ describe('htmlMiner • README.md', function() {
             upper: function($, scopeData) { return scopeData.who.toUpperCase(); }
         });
 
-        assert.deepStrictEqual(actual, {
+        assert.deepEqual(actual, {
             title: 'Hello Marco!',
             who: 'Marco',
             upper: 'MARCO'
@@ -123,7 +125,7 @@ describe('htmlMiner • README.md', function() {
                     },
                 }
             });
-            assert.deepStrictEqual(actual, {
+            assert.deepEqual(actual, {
                 title: 'Hello Marco!',
                 upper: 'HELLO MARCO!',
                 sublist: {

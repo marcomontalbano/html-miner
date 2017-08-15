@@ -1,7 +1,9 @@
 'use strict';
 
-var assert  = require('assert');
 var htmlMiner = require('../lib/');
+
+var chai = require('chai');
+var assert = chai.assert;
 var fs = require('fs');
 
 describe('htmlMiner', function() {
@@ -57,13 +59,13 @@ describe('htmlMiner', function() {
 
         it('given a string (e.g. \'h2\')', function() {
             var actual = htmlMiner(html, 'h2');
-            assert.deepStrictEqual(actual, Array(3).fill('Heading'));
+            assert.deepEqual(actual, Array(3).fill('Heading'));
         });
 
         it('given an array', function() {
             var actual = htmlMiner(html, ['h1', 'h2']);
 
-            assert.deepStrictEqual(actual, [
+            assert.deepEqual(actual, [
                 'Hello, world!',
                 Array(3).fill('Heading')
             ]);
@@ -72,7 +74,7 @@ describe('htmlMiner', function() {
         it('given an array with one element', function() {
             var actual = htmlMiner(html, ['h1']);
 
-            assert.deepStrictEqual(actual, [
+            assert.deepEqual(actual, [
                 'Hello, world!'
             ]);
         });
@@ -80,7 +82,7 @@ describe('htmlMiner', function() {
         it('given an array with object inside', function() {
             var actual = htmlMiner(html, [{ title: 'h1' }]);
 
-            assert.deepStrictEqual(actual, [{
+            assert.deepEqual(actual, [{
                 title: 'Hello, world!'
             }]);
         });
@@ -99,7 +101,7 @@ describe('htmlMiner', function() {
                 }
             });
 
-            assert.deepStrictEqual(actual, {
+            assert.deepEqual(actual, {
                 title    : 'Hello, world!',
                 headings : Array(3).fill('Heading'),
                 footer   : {
@@ -118,7 +120,7 @@ describe('htmlMiner', function() {
                 greet : function($) { return 'Hello, world!'; },
             });
 
-            assert.deepStrictEqual(actual, {
+            assert.deepEqual(actual, {
                 greet : 'Hello, world!'
             });
         });
@@ -131,7 +133,7 @@ describe('htmlMiner', function() {
                 },
             });
 
-            assert.deepStrictEqual(actual, {
+            assert.deepEqual(actual, {
                 title : 'Hello, world!',
                 uppertitle : 'HELLO, WORLD!'
             });
@@ -148,7 +150,7 @@ describe('htmlMiner', function() {
                 }
             });
 
-            assert.deepStrictEqual(actual, {
+            assert.deepEqual(actual, {
                 title    : 'Hello, world!',
                 headings : Array(3).fill('Heading'),
                 articles : [
@@ -191,7 +193,7 @@ describe('htmlMiner', function() {
             }
         });
 
-        assert.deepStrictEqual(actual, {
+        assert.deepEqual(actual, {
             title    : 'Hello, world!',
             mix : [
                 'Hello, world!',
