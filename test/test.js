@@ -59,7 +59,7 @@ describe('htmlMiner', function() {
 
         it('given a string (e.g. \'h2\')', function() {
             var actual = htmlMiner(html, 'h2');
-            assert.deepEqual(actual, Array(3).fill('Heading'));
+            assert.deepEqual(actual, ['Heading', 'Heading', 'Heading']);
         });
 
         it('given an array', function() {
@@ -67,7 +67,7 @@ describe('htmlMiner', function() {
 
             assert.deepEqual(actual, [
                 'Hello, world!',
-                Array(3).fill('Heading')
+                ['Heading', 'Heading', 'Heading']
             ]);
         });
 
@@ -103,7 +103,7 @@ describe('htmlMiner', function() {
 
             assert.deepEqual(actual, {
                 title    : 'Hello, world!',
-                headings : Array(3).fill('Heading'),
+                headings : ['Heading', 'Heading', 'Heading'],
                 footer   : {
                     copyright : '© Company 2017'
                 }
@@ -152,7 +152,7 @@ describe('htmlMiner', function() {
 
             assert.deepEqual(actual, {
                 title    : 'Hello, world!',
-                headings : Array(3).fill('Heading'),
+                headings : ['Heading', 'Heading', 'Heading'],
                 articles : [
                     {
                         title : 'Heading',
@@ -197,7 +197,7 @@ describe('htmlMiner', function() {
             title    : 'Hello, world!',
             mix : [
                 'Hello, world!',
-                Array(3).fill('Heading'),
+                ['Heading', 'Heading', 'Heading'],
                 'Hello, world!',
                 [
                     [
