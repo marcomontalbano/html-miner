@@ -98,6 +98,6 @@ Development
 -----------
 
 ```sh
-yarn
-yarn test
+npm install
+npm test
 ```
