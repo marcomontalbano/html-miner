@@ -3,6 +3,7 @@ HTML Miner
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b9430880d9994818b4e32d5ba024ba5c)](https://www.codacy.com/app/marcomontalbano/html-miner?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=marcomontalbano/html-miner&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/marcomontalbano/html-miner.svg?branch=master)](https://travis-ci.org/marcomontalbano/html-miner)
+[![Coverage Status](https://coveralls.io/repos/github/marcomontalbano/html-miner/badge.svg?branch=master)](https://coveralls.io/github/marcomontalbano/html-miner?branch=master)
 [![Npm](https://img.shields.io/npm/v/html-miner.svg)](https://www.npmjs.com/package/html-miner)
 
 
