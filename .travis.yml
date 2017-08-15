@@ -5,7 +5,8 @@ node_js:
   - "6"
   - "4"
   - "0.12"
+script: npm run coveralls
 matrix:
   fast_finish: true
   allow_failures:
-    - node_js: unstable
+    - node_js: "unstable"

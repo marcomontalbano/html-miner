@@ -1,24 +1,25 @@
 'use strict';
 
-const assert  = require('assert');
-const htmlMiner = require('../lib/');
-const fs = require('fs');
+var assert  = require('assert');
+var htmlMiner = require('../lib/');
+var fs = require('fs');
 
-describe('htmlMiner • README.md', () => {
+describe('htmlMiner • README.md', function() {
 
-    let html;
+    var exampleHTML;
+    var html = '<div class="title">Hello <span>Marco</span>!</div>';
 
-    before(function (done) {
-        fs.readFile(`${ __dirname }/html/readme.md.html`, 'utf8', (err, data) => {
+    before(function(done) {
+        fs.readFile(`${ __dirname }/html/readme.md.html`, 'utf8', function(err, data) {
             if (err) { done(err); }
-            html = data;
+            exampleHTML = data;
             done();
         });
     });
 
     //
-    it('the example should work', () => {
-        let actual = htmlMiner(html, {
+    it('the example should work', function() {
+        var actual = htmlMiner(exampleHTML, {
             title: 'h1',
             h2: 'h2',
             articles: {
@@ -29,9 +30,9 @@ describe('htmlMiner • README.md', () => {
             footer: {
                 copyright: 'footer',
                 company: 'footer span',
-                year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0]; },
+                year: function($, scopeData) { return scopeData.copyright.match(/[0-9]+/)[0]; },
             },
-            greet: ($) => { return 'Hi!'; }
+            greet: function($) { return 'Hi!'; }
         });
         assert.deepStrictEqual(actual, {
             title: 'Hello, world!',
@@ -57,6 +58,82 @@ describe('htmlMiner • README.md', () => {
             },
             greet: 'Hi!'
         });
+    });
+
+    it('usage • string', function() {
+        var actual = htmlMiner(html, '.title');
+        assert.equal(actual, 'Hello Marco!');
+    });
+
+    it('usage • function', function() {
+        var actual = htmlMiner(html, function() { return 'Hello everyone!' });
+        assert.equal(actual, 'Hello everyone!');
+    });
+
+    it('usage • array', function() {
+        var actual = htmlMiner(html, ['.title', 'span']);
+        assert.deepStrictEqual(actual, ['Hello Marco!', 'Marco']);
+    });
+
+    it('usage • object', function() {
+        var actual = htmlMiner(html, {
+            title: '.title',
+            who: 'span'
+        });
+
+        assert.deepStrictEqual(actual, {
+            title: 'Hello Marco!',
+            who: 'Marco'
+        });
+    });
+
+    it('usage • combined', function() {
+        var actual = htmlMiner(html, {
+            title: '.title',
+            who: 'span',
+            upper: function($, scopeData) { return scopeData.who.toUpperCase(); }
+        });
+
+        assert.deepStrictEqual(actual, {
+            title: 'Hello Marco!',
+            who: 'Marco',
+            upper: 'MARCO'
+        });
+    });
+
+    describe('usage • function powers', function() {
+
+        it('- use of `$`', function() {
+            var actual = htmlMiner(html, function($) { return $('.title').text(); });
+            assert.equal(actual, 'Hello Marco!');
+        });
+
+        it('- use of `scopeData`', function() {
+            var actual = htmlMiner(html, {
+                title: '.title',
+                upper: function($, scopeData) { return scopeData.title.toUpperCase(); },
+                sublist: {
+                    who: 'span',
+                    upper: function($, scopeData) {
+                        // 'scopeData.title' is undefined.
+                        return scopeData.who.toUpperCase();
+                    },
+                    isUndefined: function($, scopeData) {
+                        return scopeData.title;
+                    },
+                }
+            });
+            assert.deepStrictEqual(actual, {
+                title: 'Hello Marco!',
+                upper: 'HELLO MARCO!',
+                sublist: {
+                    who: 'Marco',
+                    upper: 'MARCO',
+                    isUndefined: undefined
+                }
+            });
+        });
+
     });
 
 });

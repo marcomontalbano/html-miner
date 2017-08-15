@@ -1,15 +1,15 @@
 'use strict';
 
-const assert  = require('assert');
-const htmlMiner = require('../lib/');
-const fs = require('fs');
+var assert  = require('assert');
+var htmlMiner = require('../lib/');
+var fs = require('fs');
 
-describe('htmlMiner', () => {
+describe('htmlMiner', function() {
 
-    let html;
+    var html;
 
-    before(function (done) {
-        fs.readFile(`${ __dirname }/html/getbootstrap.html`, 'utf8', (err, data) => {
+    before(function(done) {
+        fs.readFile(`${ __dirname }/html/getbootstrap.html`, 'utf8', function(err, data) {
             if (err) { done(err); }
             html = data;
             done();
@@ -17,33 +17,33 @@ describe('htmlMiner', () => {
     });
 
     //
-    describe('should throw an exception', () => {
+    describe('should throw an exception', function() {
 
-        it('given a number', () => {
-            assert.throws(() => { htmlMiner(html, 4); });
+        it('given a number', function() {
+            assert.throws(function() { htmlMiner(html, 4); });
         });
 
-        it('given a boolean', () => {
-            assert.throws(() => { htmlMiner(html, true); });
+        it('given a boolean', function() {
+            assert.throws(function() { htmlMiner(html, true); });
         });
 
     });
 
     //
-    describe('should returns a string', () => {
+    describe('should returns a string', function() {
 
-        it('given a string (e.g. \'h1\')', () => {
-            let actual = htmlMiner(html, 'h1');
+        it('given a string (e.g. \'h1\')', function() {
+            var actual = htmlMiner(html, 'h1');
             assert.equal(actual, 'Hello, world!');
         });
 
-        it('given a string (e.g. \'.nav-item.active > a\')', () => {
-            let actual = htmlMiner(html, '.nav-item.active > a');
+        it('given a string (e.g. \'.nav-item.active > a\')', function() {
+            var actual = htmlMiner(html, '.nav-item.active > a');
             assert.equal(actual, 'Home (current)');
         });
 
-        it('given a function', () => {
-            let actual = htmlMiner(html, ($) => {
+        it('given a function', function() {
+            var actual = htmlMiner(html, function($) {
                 $('.nav-item.active > a > span').remove();
                 return $('.nav-item.active > a').text().trim();
             });
@@ -53,15 +53,15 @@ describe('htmlMiner', () => {
     });
 
     //
-    describe('should returns an array', () => {
+    describe('should returns an array', function() {
 
-        it('given a string (e.g. \'h2\')', () => {
-            let actual = htmlMiner(html, 'h2');
+        it('given a string (e.g. \'h2\')', function() {
+            var actual = htmlMiner(html, 'h2');
             assert.deepStrictEqual(actual, Array(3).fill('Heading'));
         });
 
-        it('given an array', () => {
-            let actual = htmlMiner(html, ['h1', 'h2']);
+        it('given an array', function() {
+            var actual = htmlMiner(html, ['h1', 'h2']);
 
             assert.deepStrictEqual(actual, [
                 'Hello, world!',
@@ -69,13 +69,29 @@ describe('htmlMiner', () => {
             ]);
         });
 
+        it('given an array with one element', function() {
+            var actual = htmlMiner(html, ['h1']);
+
+            assert.deepStrictEqual(actual, [
+                'Hello, world!'
+            ]);
+        });
+
+        it('given an array with object inside', function() {
+            var actual = htmlMiner(html, [{ title: 'h1' }]);
+
+            assert.deepStrictEqual(actual, [{
+                title: 'Hello, world!'
+            }]);
+        });
+
     });
 
     //
-    describe('should returns an object', () => {
+    describe('should returns an object', function() {
 
-        it('given an object', () => {
-            let actual = htmlMiner(html, {
+        it('given an object', function() {
+            var actual = htmlMiner(html, {
                 title    : 'h1',
                 headings : 'h2',
                 footer   : {
@@ -95,11 +111,11 @@ describe('htmlMiner', () => {
     });
 
     //
-    describe('given an object', () => {
+    describe('given an object', function() {
 
-        it('should execute the defined callback', () => {
-            let actual = htmlMiner(html, {
-                greet : ($) => 'Hello, world!',
+        it('should execute the defined callback', function() {
+            var actual = htmlMiner(html, {
+                greet : function($) { return 'Hello, world!'; },
             });
 
             assert.deepStrictEqual(actual, {
@@ -107,10 +123,10 @@ describe('htmlMiner', () => {
             });
         });
 
-        it('should execute the defined callback using scopeData', () => {
-            let actual = htmlMiner(html, {
+        it('should execute the defined callback using scopeData', function() {
+            var actual = htmlMiner(html, {
                 title : 'h1',
-                uppertitle : ($, scopeData) => {
+                uppertitle : function($, scopeData) {
                     return scopeData.title.toUpperCase();
                 },
             });
@@ -121,8 +137,8 @@ describe('htmlMiner', () => {
             });
         });
 
-        it('test \'_each_\' functionality', () => {
-            let actual = htmlMiner(html, {
+        it('test \'_each_\' functionality', function() {
+            var actual = htmlMiner(html, {
                 title    : 'h1',
                 headings : 'h2',
                 articles : {
@@ -150,6 +166,62 @@ describe('htmlMiner', () => {
                     }
                 ]
             });
+        });
+
+    });
+
+    it('should work with complex combination', function() {
+
+        var actual = htmlMiner(html, {
+            title    : 'h1',
+            mix      : [
+                'h1',
+                'h2',
+                function($, scopeData) { return scopeData[0]; },
+                [
+                    '.dropdown-item',
+                    
+                ]
+            ],
+            articles : {
+                _each_ : '.col-md-4',
+                title  : 'h2',
+                text   : 'p:first-of-type',
+                length : function($, scopeData) { return scopeData.text.length; }
+            }
+        });
+
+        assert.deepStrictEqual(actual, {
+            title    : 'Hello, world!',
+            mix : [
+                'Hello, world!',
+                Array(3).fill('Heading'),
+                'Hello, world!',
+                [
+                    [
+                        'Action',
+                        'Another action',
+                        'Something else here'
+                    ]
+                ]
+            ],
+            articles : [
+                {
+                    title  : 'Heading',
+                    text   : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    length : 231,
+                },
+                {
+                    title  : 'Heading',
+                    text   : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    length : 231,
+                },
+                {
+                    title  : 'Heading',
+                    text   : 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
+                    length : 243,
+                }
+            ]
         });
 
     });

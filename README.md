@@ -6,21 +6,138 @@ HTML Miner
 [![Coverage Status](https://coveralls.io/repos/github/marcomontalbano/html-miner/badge.svg?branch=master)](https://coveralls.io/github/marcomontalbano/html-miner?branch=master)
 [![Npm](https://img.shields.io/npm/v/html-miner.svg)](https://www.npmjs.com/package/html-miner)
 
+A powerful miner who will scrape html pages for you.
 
-Install
--------
+## Install
 
 ```sh
-# using yarn
-yarn add html-miner
-
 # using npm
 npm i --save html-miner
+
+# using yarn
+yarn add html-miner
 ```
 
 
-Example
--------
+## Usage
+
+### Arguments
+
+`html-miner` accepts two arguments: `html` and `selector`.
+
+```js
+const htmlMiner = require('html-miner');
+
+// htmlMiner(html, selector);
+```
+
+#### html
+
+_html_ is a string and contains `html` code.
+
+```js
+let html = '<div class="title">Hello <span>Marco</span>!</div>';
+```
+
+#### selector
+
+_selector_ could be:
+
+`STRING`
+
+```js
+htmlMiner(html, '.title');
+//=> Hello Marco!
+```
+
+If the selector extracts more elements, the result is an array:
+
+```js
+let html = '<div>Element 1</div><div>Element 2</div>';
+htmlMiner(html, 'div');
+//=> ['Element 1', 'Element 2']
+```
+
+`FUNCTION`
+
+```js
+htmlMiner(html, () => { return 'Hello everyone!' });
+//=> Hello everyone!
+```
+
+`ARRAY`
+
+```js
+htmlMiner(html, ['.title', 'span']);
+//=> ['Hello Marco!', 'Marco']
+```
+
+`OBJECT`
+
+```js
+htmlMiner(html, {
+    title: '.title',
+    who: 'span'
+});
+//=> {
+//     title: 'Hello Marco!',
+//     who: 'Marco'
+//   }
+```
+
+You can combine `array` and `object` each other and with string and functions.
+
+```js
+htmlMiner(html, {
+    title: '.title',
+    who: 'span',
+    upper: ($, scopeData) => { return scopeData.who.toUpperCase() }
+});
+//=> {
+//     title: 'Hello Marco!',
+//     who: 'Marco',
+//     upper: 'MARCO'
+//   }
+```
+
+### Function powers
+
+The `function` accepts two arguments: `$` and `scopeData`.
+
+```js
+htmlMiner(html, ($) => { return $('.title').text(); });
+//=> Hello Marco!
+```
+
+```js
+htmlMiner(html, {
+    title: '.title',
+    upper: ($, scopeData) => { return scopeData.title.toUpperCase(); },
+    sublist: {
+        who: 'span',
+        upper: ($, scopeData) => {
+            // 'scopeData.title' is undefined.
+            return scopeData.who.toUpperCase();
+        },
+    }
+});
+//=> {
+//     title: 'Hello Marco!',
+//     upper: 'HELLO MARCO!',
+//     sublist: {
+//         who: 'Marco',
+//         upper: 'MARCO'
+//     }
+//   }
+```
+
+### Item list
+
+When selector is an `object`, you can use `_each_` as key if you want to create a list of items.
+
+For more details see the following [example](#example).
+
+## Example
 
 We have following html snippet and we want to fetch some information.
 
@@ -45,7 +162,7 @@ We have following html snippet and we want to fetch some information.
 </footer>
 ```
 
-```javascript
+```js
 const htmlMiner = require('html-miner');
 
 let json = htmlMiner(html, {
@@ -66,7 +183,7 @@ let json = htmlMiner(html, {
 
 console.log( json );
 
-// {
+//=> {
 //     title: 'Hello, world!',
 //     h2: ['Heading 1', 'Heading 2', 'Heading 3'],
 //     articles: [
@@ -89,13 +206,20 @@ console.log( json );
 //         year: '2017'
 //     },
 //     greet: 'Hi!'
-// }
+//   }
 
 ```
 
+You can analize other examples under folder `/examples`.
 
-Development
------------
+```sh
+# run examples with nodejs
+node examples/demo.js
+node examples/site.js
+```
+
+
+## Development
 
 ```sh
 npm install
