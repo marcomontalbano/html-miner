@@ -1,6 +1,6 @@
 {
   "name": "html-miner",
-  "version": "0.0.1-beta-3",
+  "version": "0.0.1",
   "description": "A powerful miner that will scrape html pages for you. ` HTML Scraper ´",
   "main": "index.js",
   "repository": "https://github.com/marcomontalbano/html-miner.git",
@@ -24,7 +24,7 @@
     "node": ">= 0.12"
   },
   "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
+    "cheerio": "^0.22.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
