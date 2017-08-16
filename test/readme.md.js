@@ -34,7 +34,7 @@ describe('htmlMiner • README.md', function() {
                 company: 'footer span',
                 year: function($, scopeData) { return scopeData.copyright.match(/[0-9]+/)[0]; },
             },
-            greet: function($) { return 'Hi!'; }
+            greet: function() { return 'Hi!'; }
         });
         assert.deepEqual(actual, {
             title: 'Hello, world!',
@@ -68,7 +68,7 @@ describe('htmlMiner • README.md', function() {
     });
 
     it('usage • function', function() {
-        var actual = htmlMiner(html, function() { return 'Hello everyone!' });
+        var actual = htmlMiner(html, function() { return 'Hello everyone!'; });
         assert.equal(actual, 'Hello everyone!');
     });
 

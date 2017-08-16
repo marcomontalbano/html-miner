@@ -117,7 +117,7 @@ describe('htmlMiner', function() {
 
         it('should execute the defined callback', function() {
             var actual = htmlMiner(html, {
-                greet : function($) { return 'Hello, world!'; },
+                greet : function() { return 'Hello, world!'; },
             });
 
             assert.deepEqual(actual, {

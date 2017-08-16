@@ -6,7 +6,7 @@ HTML Miner
 [![Coverage Status](https://coveralls.io/repos/github/marcomontalbano/html-miner/badge.svg?branch=master)](https://coveralls.io/github/marcomontalbano/html-miner?branch=master)
 [![Npm](https://img.shields.io/npm/v/html-miner.svg)](https://www.npmjs.com/package/html-miner)
 
-A powerful miner who will scrape html pages for you.
+A powerful miner that will scrape html pages for you.
 
 ## Install
 
@@ -85,7 +85,7 @@ htmlMiner(html, {
 //   }
 ```
 
-You can combine `array` and `object` each other and with string and functions.
+You can combine `array` and `object` with each other or with string and functions.
 
 ```js
 htmlMiner(html, {
@@ -100,9 +100,9 @@ htmlMiner(html, {
 //   }
 ```
 
-### Function powers
+### Function in detail
 
-The `function` accepts two arguments: `$` and `scopeData`.
+A `function` accepts two arguments: `$` and `scopeData`.
 
 ```js
 htmlMiner(html, ($) => { return $('.title').text(); });
@@ -135,11 +135,12 @@ htmlMiner(html, {
 
 When selector is an `object`, you can use `_each_` as key if you want to create a list of items.
 
-For more details see the following [example](#example).
+For more details see the following [example](#lets-try-this-out).
 
-## Example
 
-We have following html snippet and we want to fetch some information.
+## Let's try this out
+
+Consider the following html snippet: we will try and fetch some information.
 
 ```html
 <h1>Hello, world!</h1>
@@ -210,10 +211,10 @@ console.log( json );
 
 ```
 
-You can analize other examples under folder `/examples`.
+You can find other examples under the folder `/examples`.
 
 ```sh
-# run examples with nodejs
+# you can test examples with nodejs
 node examples/demo.js
 node examples/site.js
 ```
