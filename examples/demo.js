@@ -1,6 +1,6 @@
 'use strict';
 
-var htmlScraper = require('../lib/');
+var htmlMiner = require('../lib/');
 
 var path = require('path');
 var fs = require('fs');
@@ -11,7 +11,7 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrapd.html'), 'utf8', fun
         throw err;
     }
 
-    var json = htmlScraper(data, {
+    var json = htmlMiner(data, {
         title    : 'h1',
         headings : 'h2',
         articles : {

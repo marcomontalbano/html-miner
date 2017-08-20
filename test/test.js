@@ -31,6 +31,16 @@ describe('htmlMiner', function() {
 
     });
 
+
+    //
+    describe('should returns a undefined', function() {
+
+        it('given an inexistent tag name (e.g. \'foo\')', function() {
+            var actual = htmlMiner(html, 'foo');
+            assert.equal(actual, undefined);
+        });
+
+    });
     //
     describe('should returns a string', function() {
 

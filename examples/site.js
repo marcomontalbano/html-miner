@@ -1,6 +1,6 @@
 'use strict';
 
-var htmlScraper = require('../lib/');
+var htmlMiner = require('../lib/');
 
 var https = require('https');
 
@@ -27,7 +27,7 @@ var simpleRequest = function(host, method, callback) {
 
 simpleRequest('marcomontalbano.com', 'GET', function(html) {
 
-    var json = htmlScraper(html, {
+    var json = htmlMiner(html, {
         title: 'h1',
         links: {
             _each_: '.nav.navbar-nav li',
