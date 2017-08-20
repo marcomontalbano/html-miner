@@ -12,6 +12,8 @@ A powerful miner that will scrape html pages for you.
 
 ## Install
 
+[![NPM](https://nodei.co/npm/html-miner.svg)](https://nodei.co/npm/html-miner/)
+
 ```sh
 # using npm
 npm i --save html-miner

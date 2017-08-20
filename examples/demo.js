@@ -2,9 +2,14 @@
 
 var htmlScraper = require('../lib/');
 
+var path = require('path');
 var fs = require('fs');
 
-fs.readFile(__dirname + '/../test/html/getbootstrap.html', 'utf8', function(err, data) {
+fs.readFile(path.join(__dirname, '../test/html/getbootstrapd.html'), 'utf8', function(err, data) {
+
+    if (err) {
+        throw err;
+    }
 
     var json = htmlScraper(data, {
         title    : 'h1',
@@ -12,11 +17,11 @@ fs.readFile(__dirname + '/../test/html/getbootstrap.html', 'utf8', function(err,
         articles : {
             _each_ : '.col-md-4',
             title  : 'h2',
-            text   : 'p:first-of-type',
+            text   : 'p:first-of-type'
         },
         footer: {
             copyright: 'footer',
-            year: function($, scopeData) { return scopeData.copyright.match(/[0-9]+/)[0]; },
+            year: function($, scopeData) { return scopeData.copyright.match(/[0-9]+/)[0]; }
         }
     });
 
