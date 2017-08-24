@@ -5,7 +5,7 @@ var htmlMiner = require('../lib/');
 var path = require('path');
 var fs = require('fs');
 
-fs.readFile(path.join(__dirname, '../test/html/getbootstrapd.html'), 'utf8', function(err, data) {
+fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', function(err, data) {
 
     if (err) {
         throw err;
@@ -21,7 +21,7 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrapd.html'), 'utf8', fun
         },
         footer: {
             copyright: 'footer',
-            year: function($, scopeData) { return scopeData.copyright.match(/[0-9]+/)[0]; }
+            year: function(options) { return options.scopeData.copyright.match(/[0-9]+/)[0]; }
         }
     });
 

@@ -6,3 +6,6 @@ lint:
 
 test: lint
 	@./node_modules/.bin/mocha --recursive
+
+watch: lint
+	@./node_modules/.bin/mocha --recursive --reporter dot watch

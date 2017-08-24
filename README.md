@@ -35,7 +35,7 @@ const htmlMiner = require('html-miner');
 // htmlMiner(html, selector);
 ```
 
-#### html
+#### HTML
 
 _html_ is a string and contains `html` code.
 
@@ -43,7 +43,7 @@ _html_ is a string and contains `html` code.
 let html = '<div class="title">Hello <span>Marco</span>!</div>';
 ```
 
-#### selector
+#### SELECTOR
 
 _selector_ could be:
 
@@ -57,8 +57,8 @@ htmlMiner(html, '.title');
 If the selector extracts more elements, the result is an array:
 
 ```js
-let html = '<div>Element 1</div><div>Element 2</div>';
-htmlMiner(html, 'div');
+let htmlWithDivs = '<div>Element 1</div><div>Element 2</div>';
+htmlMiner(htmlWithDivs, 'div');
 //=> ['Element 1', 'Element 2']
 ```
 
@@ -94,8 +94,8 @@ You can combine `array` and `object` with each other or with string and function
 ```js
 htmlMiner(html, {
     title: '.title',
-    who: 'span',
-    upper: ($, scopeData) => { return scopeData.who.toUpperCase() }
+    who: '.title span',
+    upper: (options) => { return options.scopeData.who.toUpperCase(); }
 });
 //=> {
 //     title: 'Hello Marco!',
@@ -104,36 +104,88 @@ htmlMiner(html, {
 //   }
 ```
 
+
 ### Function in detail
 
-A `function` accepts two arguments: `$` and `scopeData`.
+A `function` accepts an argument `options` that is an `object`.
 
-```js
-htmlMiner(html, ($) => { return $('.title').text(); });
-//=> Hello Marco!
-```
+#### options
 
-```js
-htmlMiner(html, {
-    title: '.title',
-    upper: ($, scopeData) => { return scopeData.title.toUpperCase(); },
-    sublist: {
-        who: 'span',
-        upper: ($, scopeData) => {
-            // 'scopeData.title' is undefined.
-            return scopeData.who.toUpperCase();
+- `options.$`: is a jQuery-like function pointing to the document ( html argument ). You can use it to query and fetch elements from the html.
+
+    ```js
+    htmlMiner(html, (options) => { return options.$('.title').text(); });
+    //=> Hello Marco!
+    ```
+
+- `options.$scope`: useful when combined with `_each_` (read [item list](#item-list) paragraph).
+
+    ```js
+    htmlMiner(html, {
+        title: '.title',
+        spanList: {
+            _each_: 'span',
+            value: (options) => {
+                // "options.$scope.find('.title')" doesn't exist.
+                return options.$scope.text();
+            }
+        }
+    });
+    //=> {
+    //     title: 'Hello Marco!',
+    //     spanList: [{
+    //         value: 'Marco'
+    //     }]
+    //   }
+    ```
+
+- `options.globalData`: is an object that contains all **previously** fetched datas.
+
+    ```js
+    htmlMiner(html, {
+        title: '.title',
+        spanList: {
+            _each_: '.title span',
+            pageTitle: function(options) {
+                // "options.globalData.who" is undefined because defined later.
+                return options.globalData.title;
+            }
         },
-    }
-});
-//=> {
-//     title: 'Hello Marco!',
-//     upper: 'HELLO MARCO!',
-//     sublist: {
-//         who: 'Marco',
-//         upper: 'MARCO'
-//     }
-//   }
-```
+        who: '.title span'
+    });
+    //=> {
+    //     title: 'Hello Marco!',
+    //     spanList: [{
+    //         pageTitle: 'Hello Marco!'
+    //     }],
+    //     who: 'Marco'
+    //   }
+    ```
+
+- `options.scopeData`: similar to `globalData`, but only contains scope data. Useful when combined with `_each_` (read [item list](#item-list) paragraph).
+
+    ```js
+    htmlMiner(html, {
+        title: '.title',
+        upper: (options) => { return options.scopeData.title.toUpperCase(); },
+        sublist: {
+            who: '.title span',
+            upper: (options) => {
+                // "options.scopeData.title" is undefined because "title" is out of scope.
+                return options.scopeData.who.toUpperCase();
+            },
+        }
+    });
+    //=> {
+    //     title: 'Hello Marco!',
+    //     upper: 'HELLO MARCO!',
+    //     sublist: {
+    //         who: 'Marco',
+    //         upper: 'MARCO'
+    //     }
+    //   }
+    ```
+
 
 ### Item list
 
@@ -181,9 +233,9 @@ let json = htmlMiner(html, {
     footer: {
         copyright: 'footer',
         company: 'footer span',
-        year: ($, scopeData) => { return scopeData.copyright.match(/[0-9]+/)[0] },
+        year: (options) => { return options.scopeData.copyright.match(/[0-9]+/)[0]; },
     },
-    greet: $ => { return 'Hi!' }
+    greet: () => { return 'Hi!'; }
 });
 
 console.log( json );

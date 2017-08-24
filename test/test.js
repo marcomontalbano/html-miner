@@ -33,7 +33,7 @@ describe('htmlMiner', function() {
 
 
     //
-    describe('should returns a undefined', function() {
+    describe('should returns an undefined', function() {
 
         it('given an inexistent tag name (e.g. \'foo\')', function() {
             var actual = htmlMiner(html, 'foo');
@@ -41,6 +41,7 @@ describe('htmlMiner', function() {
         });
 
     });
+
     //
     describe('should returns a string', function() {
 
@@ -55,9 +56,9 @@ describe('htmlMiner', function() {
         });
 
         it('given a function', function() {
-            var actual = htmlMiner(html, function($) {
-                $('.nav-item.active > a > span').remove();
-                return $('.nav-item.active > a').text().trim();
+            var actual = htmlMiner(html, function(options) {
+                options.$('.nav-item.active > a > span').remove();
+                return options.$('.nav-item.active > a').text().trim();
             });
             assert.equal(actual, 'Home');
         });
@@ -89,6 +90,12 @@ describe('htmlMiner', function() {
             ]);
         });
 
+        it('given an empty array', function() {
+            var actual = htmlMiner(html, []);
+
+            assert.deepEqual(actual, []);
+        });
+
         it('given an array with object inside', function() {
             var actual = htmlMiner(html, [{ title: 'h1' }]);
 
@@ -104,18 +111,18 @@ describe('htmlMiner', function() {
 
         it('given an object', function() {
             var actual = htmlMiner(html, {
-                title    : 'h1',
-                headings : 'h2',
-                footer   : {
-                    copyright : 'footer p'
+                title: 'h1',
+                headings: 'h2',
+                footer: {
+                    copyright: 'footer p'
                 }
             });
 
             assert.deepEqual(actual, {
-                title    : 'Hello, world!',
-                headings : ['Heading', 'Heading', 'Heading'],
-                footer   : {
-                    copyright : '© Company 2017'
+                title: 'Hello, world!',
+                headings: ['Heading', 'Heading', 'Heading'],
+                footer: {
+                    copyright: '© Company 2017'
                 }
             });
         });
@@ -123,89 +130,171 @@ describe('htmlMiner', function() {
     });
 
     //
-    describe('given an object', function() {
+    describe('function in detail', function() {
 
         it('should execute the defined callback', function() {
             var actual = htmlMiner(html, {
-                greet : function() { return 'Hello, world!'; },
+                greet: function() { return 'Hello, world!'; },
             });
 
             assert.deepEqual(actual, {
-                greet : 'Hello, world!'
+                greet: 'Hello, world!'
             });
         });
 
-        it('should execute the defined callback using scopeData', function() {
+        it('should execute the defined callback using \'$\'', function() {
             var actual = htmlMiner(html, {
-                title : 'h1',
-                uppertitle : function($, scopeData) {
-                    return scopeData.title.toUpperCase();
+                title: function(options) {
+                    return options.$('h1').text();
                 },
             });
-
+            
             assert.deepEqual(actual, {
-                title : 'Hello, world!',
-                uppertitle : 'HELLO, WORLD!'
+                title: 'Hello, world!'
             });
         });
 
-        it('test \'_each_\' functionality', function() {
+        it('should execute the defined callback using \'$scope\'', function() {
             var actual = htmlMiner(html, {
-                title    : 'h1',
-                headings : 'h2',
-                articles : {
-                    _each_ : '.col-md-4',
-                    title  : 'h2',
-                    text   : 'p:first-of-type',
+                title: 'h1',
+                lang: function(options) {
+                    return options.$scope.find('html').attr('lang');
+                },
+                sublist: {
+                    lang: function(options) {
+                        return options.$scope.find('html').attr('lang');
+                    },
                 }
             });
 
             assert.deepEqual(actual, {
-                title    : 'Hello, world!',
-                headings : ['Heading', 'Heading', 'Heading'],
-                articles : [
-                    {
-                        title : 'Heading',
-                        text  : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
-                    },
-                    {
-                        title : 'Heading',
-                        text  : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
-                    },
-                    {
-                        title : 'Heading',
-                        text  : 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
+                title: 'Hello, world!',
+                lang: 'en',
+                sublist: {
+                    lang: 'en'
+                }
+            });
+        });
+
+        it('should execute the defined callback using \'globalData\'', function() {
+            var actual = htmlMiner(html, {
+                title: 'h1',
+                sublist: {
+                    uppertitle: function(options) {
+                        return options.globalData.title.toUpperCase();
                     }
-                ]
+                },
+            });
+
+            assert.deepEqual(actual, {
+                title: 'Hello, world!',
+                sublist: {
+                    uppertitle : 'HELLO, WORLD!'
+                }
+            });
+        });
+
+        it('should execute the defined callback using \'scopeData\'', function() {
+            var actual = htmlMiner(html, {
+                title: 'h1',
+                titleLength: function(options) {
+                    return options.scopeData.title.length;
+                },
+                sublist: {
+                    subtitle: 'h1 ~ p:first-of-type',
+                    titleLength: function(options) {
+                        return options.scopeData.title; // this is undefined
+                    },
+                    subtitleLength: function(options) {
+                        return options.scopeData.subtitle.length;
+                    }
+                }
+            });
+
+            assert.deepEqual(actual, {
+                title: 'Hello, world!',
+                titleLength: 13,
+                sublist: {
+                    subtitle: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
+                    titleLength: undefined,
+                    subtitleLength: 214
+                }
             });
         });
 
     });
 
-    it('should work with complex combination', function() {
-
+    it('test \'_each_\' functionality', function() {
         var actual = htmlMiner(html, {
-            title    : 'h1',
-            mix      : [
-                'h1',
-                'h2',
-                function($, scopeData) { return scopeData[0]; },
-                [
-                    '.dropdown-item',
-                    
-                ]
-            ],
-            articles : {
-                _each_ : '.col-md-4',
-                title  : 'h2',
-                text   : 'p:first-of-type',
-                length : function($, scopeData) { return scopeData.text.length; }
+            title: 'h1',
+            headings: 'h2',
+            articlesLength : function(options) {
+                return options.$scope.find('.col-md-4').length;
+            },
+            articles: {
+                _each_: '.col-md-4',
+                title: 'h2',
+                text: 'p:first-of-type',
+                isOk: function(options) {
+                    return options.$scope.hasClass('col-md-4');
+                }
             }
         });
 
         assert.deepEqual(actual, {
-            title    : 'Hello, world!',
-            mix : [
+            title: 'Hello, world!',
+            headings: ['Heading', 'Heading', 'Heading'],
+            articlesLength: 3,
+            articles: [
+                {
+                    title: 'Heading',
+                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    isOk: true
+                },
+                {
+                    title: 'Heading',
+                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    isOk: true
+                },
+                {
+                    title: 'Heading',
+                    text: 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
+                    isOk: true
+                }
+            ]
+        });
+    });
+
+    it('should work with complex combination', function() {
+
+        var actual = htmlMiner(html, {
+            title: 'h1',
+            subtitle: 'h1 ~ p:first-of-type',
+            mix: [
+                'h1',
+                'h2',
+                function(options) { return options.scopeData[0]; },
+                [
+                    '.dropdown-item'
+                ]
+            ],
+            articles : {
+                _each_: '.col-md-4',
+                title: 'h2',
+                text: 'p:first-of-type',
+                $document: function(options) { return options.$('h1').text(); },
+                $scopeH1: function(options) { return options.$scope.find('h1').text(); },
+                $scopeH2: function(options) { return options.$scope.find('h2').text(); },
+                length: function(options) { return options.scopeData.text.length; },
+                scopeMessage: function(options) { return options.scopeData.subtitle; },
+                globalMessage: function(options) { return options.globalData.subtitle; }
+            }
+        });
+
+        assert.deepEqual(actual, {
+            title: 'Hello, world!',
+            subtitle: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
+            mix: [
                 'Hello, world!',
                 ['Heading', 'Heading', 'Heading'],
                 'Hello, world!',
@@ -217,21 +306,36 @@ describe('htmlMiner', function() {
                     ]
                 ]
             ],
-            articles : [
+            articles: [
                 {
-                    title  : 'Heading',
-                    text   : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
-                    length : 231,
+                    title: 'Heading',
+                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    length: 231,
+                    $scopeH1: '',
+                    $scopeH2: 'Heading',
+                    $document: 'Hello, world!',
+                    scopeMessage: undefined,
+                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.'
                 },
                 {
-                    title  : 'Heading',
-                    text   : 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
-                    length : 231,
+                    title: 'Heading',
+                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    length: 231,
+                    $scopeH1: '',
+                    $scopeH2: 'Heading',
+                    $document: 'Hello, world!',
+                    scopeMessage: undefined,
+                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.'
                 },
                 {
-                    title  : 'Heading',
-                    text   : 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
-                    length : 243,
+                    title: 'Heading',
+                    text: 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
+                    length: 243,
+                    $scopeH1: '',
+                    $scopeH2: 'Heading',
+                    $document: 'Hello, world!',
+                    scopeMessage: undefined,
+                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.'
                 }
             ]
         });

@@ -32,7 +32,7 @@ describe('htmlMiner • README.md', function() {
             footer: {
                 copyright: 'footer',
                 company: 'footer span',
-                year: function($, scopeData) { return scopeData.copyright.match(/[0-9]+/)[0]; },
+                year: function(options) { return options.scopeData.copyright.match(/[0-9]+/)[0]; },
             },
             greet: function() { return 'Hi!'; }
         });
@@ -92,8 +92,8 @@ describe('htmlMiner • README.md', function() {
     it('usage • combined', function() {
         var actual = htmlMiner(html, {
             title: '.title',
-            who: 'span',
-            upper: function($, scopeData) { return scopeData.who.toUpperCase(); }
+            who: '.title span',
+            upper: function(options) { return options.scopeData.who.toUpperCase(); }
         });
 
         assert.deepEqual(actual, {
@@ -103,25 +103,75 @@ describe('htmlMiner • README.md', function() {
         });
     });
 
-    describe('usage • function powers', function() {
+    describe('usage • function in detail', function() {
 
-        it('- use of `$`', function() {
-            var actual = htmlMiner(html, function($) { return $('.title').text(); });
+        it('- use of `options.$`', function() {
+            var actual = htmlMiner(html, function(options) {
+                return options.$('.title').text();
+            });
+
             assert.equal(actual, 'Hello Marco!');
         });
 
-        it('- use of `scopeData`', function() {
+        it('- use of `options.$scope`', function() {
             var actual = htmlMiner(html, {
                 title: '.title',
-                upper: function($, scopeData) { return scopeData.title.toUpperCase(); },
-                sublist: {
-                    who: 'span',
-                    upper: function($, scopeData) {
-                        // 'scopeData.title' is undefined.
-                        return scopeData.who.toUpperCase();
+                spanList: {
+                    _each_: 'span',
+                    value: function(options) {
+                        return options.$scope.text();
                     },
-                    isUndefined: function($, scopeData) {
-                        return scopeData.title;
+                    isUndefined: function(options) {
+                        return options.$scope.find('.title').length;
+                    },
+                }
+            });
+
+            assert.deepEqual(actual, {
+                title: 'Hello Marco!',
+                spanList: [{
+                    value: 'Marco',
+                    isUndefined: 0
+                }]
+            });
+        });
+
+        it('- use of `options.globalData`', function() {
+            var actual = htmlMiner(html, {
+                title: '.title',
+                spanList: {
+                    _each_: '.title span',
+                    pageTitle: function(options) {
+                        return options.globalData.title;
+                    },
+                    isUndefined: function(options) {
+                        return options.globalData.who;
+                    }
+                },
+                who: '.title span'
+            });
+
+            assert.deepEqual(actual, {
+                title: 'Hello Marco!',
+                spanList: [{
+                    pageTitle: 'Hello Marco!',
+                    isUndefined: undefined
+                }],
+                who: 'Marco'
+            });
+        });
+
+        it('- use of `options.scopeData`', function() {
+            var actual = htmlMiner(html, {
+                title: '.title',
+                upper: function(options) { return options.scopeData.title.toUpperCase(); },
+                sublist: {
+                    who: '.title span',
+                    upper: function(options) {
+                        return options.scopeData.who.toUpperCase();
+                    },
+                    isUndefined: function(options) {
+                        return options.scopeData.title;
                     },
                 }
             });
