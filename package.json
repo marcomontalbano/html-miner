@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "jshint lib/ test/ --verbose",
+    "lint": "eslint lib/ test/ examples/",
     "test": "npm run lint && mocha --recursive",
     "watch": "npm run lint && mocha --recursive --reporter dot watch || true"
   },
@@ -30,8 +30,8 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "eslint": "^4.5.0",
     "chai": "^4.1.1",
-    "jshint": "^2.9.5",
     "mocha": "^3.5.0"
   }
 }

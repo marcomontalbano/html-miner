@@ -28,7 +28,7 @@ var simpleRequest = function(_url, _method, _callback) {
     });
 
     req.on('error', function(e) {
-      process.stdout.write('problem with request: ' + e.message);
+        process.stdout.write('problem with request: ' + e.message);
     });
 
     req.end();
