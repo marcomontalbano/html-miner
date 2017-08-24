@@ -56,9 +56,9 @@ describe('htmlMiner', function() {
         });
 
         it('given a function', function() {
-            var actual = htmlMiner(html, function(options) {
-                options.$('.nav-item.active > a > span').remove();
-                return options.$('.nav-item.active > a').text().trim();
+            var actual = htmlMiner(html, function(arg) {
+                arg.$('.nav-item.active > a > span').remove();
+                return arg.$('.nav-item.active > a').text().trim();
             });
             assert.equal(actual, 'Home');
         });
@@ -144,8 +144,8 @@ describe('htmlMiner', function() {
 
         it('should execute the defined callback using \'$\'', function() {
             var actual = htmlMiner(html, {
-                title: function(options) {
-                    return options.$('h1').text();
+                title: function(arg) {
+                    return arg.$('h1').text();
                 },
             });
             
@@ -157,12 +157,12 @@ describe('htmlMiner', function() {
         it('should execute the defined callback using \'$scope\'', function() {
             var actual = htmlMiner(html, {
                 title: 'h1',
-                lang: function(options) {
-                    return options.$scope.find('html').attr('lang');
+                lang: function(arg) {
+                    return arg.$scope.find('html').attr('lang');
                 },
                 sublist: {
-                    lang: function(options) {
-                        return options.$scope.find('html').attr('lang');
+                    lang: function(arg) {
+                        return arg.$scope.find('html').attr('lang');
                     },
                 }
             });
@@ -180,8 +180,8 @@ describe('htmlMiner', function() {
             var actual = htmlMiner(html, {
                 title: 'h1',
                 sublist: {
-                    uppertitle: function(options) {
-                        return options.globalData.title.toUpperCase();
+                    uppertitle: function(arg) {
+                        return arg.globalData.title.toUpperCase();
                     }
                 },
             });
@@ -197,16 +197,16 @@ describe('htmlMiner', function() {
         it('should execute the defined callback using \'scopeData\'', function() {
             var actual = htmlMiner(html, {
                 title: 'h1',
-                titleLength: function(options) {
-                    return options.scopeData.title.length;
+                titleLength: function(arg) {
+                    return arg.scopeData.title.length;
                 },
                 sublist: {
                     subtitle: 'h1 ~ p:first-of-type',
-                    titleLength: function(options) {
-                        return options.scopeData.title; // this is undefined
+                    titleLength: function(arg) {
+                        return arg.scopeData.title; // this is undefined
                     },
-                    subtitleLength: function(options) {
-                        return options.scopeData.subtitle.length;
+                    subtitleLength: function(arg) {
+                        return arg.scopeData.subtitle.length;
                     }
                 }
             });
@@ -228,15 +228,15 @@ describe('htmlMiner', function() {
         var actual = htmlMiner(html, {
             title: 'h1',
             headings: 'h2',
-            articlesLength : function(options) {
-                return options.$scope.find('.col-md-4').length;
+            articlesLength : function(arg) {
+                return arg.$scope.find('.col-md-4').length;
             },
             articles: {
                 _each_: '.col-md-4',
                 title: 'h2',
                 text: 'p:first-of-type',
-                isOk: function(options) {
-                    return options.$scope.hasClass('col-md-4');
+                isOk: function(arg) {
+                    return arg.$scope.hasClass('col-md-4');
                 }
             }
         });
@@ -273,7 +273,7 @@ describe('htmlMiner', function() {
             mix: [
                 'h1',
                 'h2',
-                function(options) { return options.scopeData[0]; },
+                function(arg) { return arg.scopeData[0]; },
                 [
                     '.dropdown-item'
                 ]
@@ -282,12 +282,12 @@ describe('htmlMiner', function() {
                 _each_: '.col-md-4',
                 title: 'h2',
                 text: 'p:first-of-type',
-                $document: function(options) { return options.$('h1').text(); },
-                $scopeH1: function(options) { return options.$scope.find('h1').text(); },
-                $scopeH2: function(options) { return options.$scope.find('h2').text(); },
-                length: function(options) { return options.scopeData.text.length; },
-                scopeMessage: function(options) { return options.scopeData.subtitle; },
-                globalMessage: function(options) { return options.globalData.subtitle; }
+                $document: function(arg) { return arg.$('h1').text(); },
+                $scopeH1: function(arg) { return arg.$scope.find('h1').text(); },
+                $scopeH2: function(arg) { return arg.$scope.find('h2').text(); },
+                length: function(arg) { return arg.scopeData.text.length; },
+                scopeMessage: function(arg) { return arg.scopeData.subtitle; },
+                globalMessage: function(arg) { return arg.globalData.subtitle; }
             }
         });
 

@@ -42,14 +42,14 @@ simpleRequest('https://marcomontalbano.com', 'GET', function(html, _options) {
         links: {
             _each_: '.nav.navbar-nav li',
             text: 'a',
-            href: function(options) { return options.$scope.find('a').attr('href'); }
+            href: function(arg) { return arg.$scope.find('a').attr('href'); }
         },
         portfolio: {
             _each_: '.portfolio',
             title: '.content .title',
             description: '.content .description',
             ribbon: '.ribbon',
-            image: function(options) { return _.trimEnd(_options.href, '/') + options.$scope.find('img').attr('src'); }
+            image: function(arg) { return _.trimEnd(_options.href, '/') + arg.$scope.find('img').attr('src'); }
         }
     });
 

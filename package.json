@@ -11,7 +11,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "make test"
+    "lint": "jshint lib/ test/ --verbose",
+    "test": "npm run lint && mocha --recursive",
+    "watch": "npm run lint && mocha --recursive --reporter dot watch || true"
   },
   "keywords": [
     "node",

@@ -32,7 +32,7 @@ describe('htmlMiner • README.md', function() {
             footer: {
                 copyright: 'footer',
                 company: 'footer span',
-                year: function(options) { return options.scopeData.copyright.match(/[0-9]+/)[0]; },
+                year: function(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; },
             },
             greet: function() { return 'Hi!'; }
         });
@@ -93,7 +93,7 @@ describe('htmlMiner • README.md', function() {
         var actual = htmlMiner(html, {
             title: '.title',
             who: '.title span',
-            upper: function(options) { return options.scopeData.who.toUpperCase(); }
+            upper: function(arg) { return arg.scopeData.who.toUpperCase(); }
         });
 
         assert.deepEqual(actual, {
@@ -105,24 +105,24 @@ describe('htmlMiner • README.md', function() {
 
     describe('usage • function in detail', function() {
 
-        it('- use of `options.$`', function() {
-            var actual = htmlMiner(html, function(options) {
-                return options.$('.title').text();
+        it('- use of `$`', function() {
+            var actual = htmlMiner(html, function(arg) {
+                return arg.$('.title').text();
             });
 
             assert.equal(actual, 'Hello Marco!');
         });
 
-        it('- use of `options.$scope`', function() {
+        it('- use of `$scope`', function() {
             var actual = htmlMiner(html, {
                 title: '.title',
                 spanList: {
                     _each_: 'span',
-                    value: function(options) {
-                        return options.$scope.text();
+                    value: function(arg) {
+                        return arg.$scope.text();
                     },
-                    isUndefined: function(options) {
-                        return options.$scope.find('.title').length;
+                    isUndefined: function(arg) {
+                        return arg.$scope.find('.title').length;
                     },
                 }
             });
@@ -136,16 +136,16 @@ describe('htmlMiner • README.md', function() {
             });
         });
 
-        it('- use of `options.globalData`', function() {
+        it('- use of `globalData`', function() {
             var actual = htmlMiner(html, {
                 title: '.title',
                 spanList: {
                     _each_: '.title span',
-                    pageTitle: function(options) {
-                        return options.globalData.title;
+                    pageTitle: function(arg) {
+                        return arg.globalData.title;
                     },
-                    isUndefined: function(options) {
-                        return options.globalData.who;
+                    isUndefined: function(arg) {
+                        return arg.globalData.who;
                     }
                 },
                 who: '.title span'
@@ -161,17 +161,17 @@ describe('htmlMiner • README.md', function() {
             });
         });
 
-        it('- use of `options.scopeData`', function() {
+        it('- use of `scopeData`', function() {
             var actual = htmlMiner(html, {
                 title: '.title',
-                upper: function(options) { return options.scopeData.title.toUpperCase(); },
+                upper: function(arg) { return arg.scopeData.title.toUpperCase(); },
                 sublist: {
                     who: '.title span',
-                    upper: function(options) {
-                        return options.scopeData.who.toUpperCase();
+                    upper: function(arg) {
+                        return arg.scopeData.who.toUpperCase();
                     },
-                    isUndefined: function(options) {
-                        return options.scopeData.title;
+                    isUndefined: function(arg) {
+                        return arg.scopeData.title;
                     },
                 }
             });
