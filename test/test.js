@@ -224,45 +224,78 @@ describe('htmlMiner', function() {
 
     });
 
-    it('test \'_each_\' functionality', function() {
-        var actual = htmlMiner(html, {
-            title: 'h1',
-            headings: 'h2',
-            articlesLength : function(arg) {
-                return arg.$scope.find('.col-md-4').length;
-            },
-            articles: {
-                _each_: '.col-md-4',
-                title: 'h2',
-                text: 'p:first-of-type',
-                isOk: function(arg) {
-                    return arg.$scope.hasClass('col-md-4');
+    describe('manipulators', function() {
+
+        it('test \'_each_\'', function() {
+            var actual = htmlMiner(html, {
+                title: 'h1',
+                headings: 'h2',
+                articlesLength : function(arg) {
+                    return arg.$scope.find('.col-md-4').length;
+                },
+                articles: {
+                    _each_: '.col-md-4',
+                    title: 'h2',
+                    text: 'p:first-of-type',
+                    isOk: function(arg) {
+                        return arg.$scope.hasClass('col-md-4');
+                    }
                 }
-            }
+            });
+
+            assert.deepEqual(actual, {
+                title: 'Hello, world!',
+                headings: ['Heading', 'Heading', 'Heading'],
+                articlesLength: 3,
+                articles: [
+                    {
+                        title: 'Heading',
+                        text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                        isOk: true
+                    },
+                    {
+                        title: 'Heading',
+                        text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                        isOk: true
+                    },
+                    {
+                        title: 'Heading',
+                        text: 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
+                        isOk: true
+                    }
+                ]
+            });
         });
 
-        assert.deepEqual(actual, {
-            title: 'Hello, world!',
-            headings: ['Heading', 'Heading', 'Heading'],
-            articlesLength: 3,
-            articles: [
-                {
-                    title: 'Heading',
-                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
-                    isOk: true
+        it('test \'_container_\'', function() {
+            var actual = htmlMiner(html, {
+                title: 'h1',
+                headings: 'h2',
+                articlesLength : function(arg) {
+                    return arg.$scope.find('.col-md-4').length;
                 },
-                {
-                    title: 'Heading',
-                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
-                    isOk: true
-                },
-                {
-                    title: 'Heading',
-                    text: 'Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.',
-                    isOk: true
+                footer: {
+                    _container_: 'footer',
+                    copyright: function(arg) { return arg.$scope.text().trim(); },
+                    year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); },
+                    isFooter: function(arg) {
+                        return arg.$scope.is('footer');
+                    }
                 }
-            ]
+            });
+
+            assert.deepEqual(actual, {
+                title: 'Hello, world!',
+                headings: ['Heading', 'Heading', 'Heading'],
+                articlesLength: 3,
+                footer: {
+                    copyright: '© Company 2017',
+                    year: 2017,
+                    isFooter: true
+                }
+            });
         });
+
     });
 
     it('should work with complex combination', function() {

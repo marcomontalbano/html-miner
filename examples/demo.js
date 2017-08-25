@@ -21,7 +21,7 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', func
         },
         footer: {
             copyright: 'footer',
-            year: function(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; }
+            year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); }
         }
     });
 
