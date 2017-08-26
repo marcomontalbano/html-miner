@@ -23,6 +23,7 @@ describe('htmlMiner • README.md', function() {
     it('the example should work', function() {
         var actual = htmlMiner(exampleHTML, {
             title: 'h1',
+            who: 'h1 span',
             h2: 'h2',
             articles: {
                 _each_: '.articles .article',
@@ -30,14 +31,16 @@ describe('htmlMiner • README.md', function() {
                 content: 'p',
             },
             footer: {
-                copyright: 'footer',
-                company: 'footer span',
+                _container_: 'footer',
+                copyright: function(arg) { return arg.$scope.text().trim(); },
+                company: 'span',
                 year: function(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; },
             },
             greet: function() { return 'Hi!'; }
         });
         assert.deepEqual(actual, {
             title: 'Hello, world!',
+            who: 'world',
             h2: ['Heading 1', 'Heading 2', 'Heading 3'],
             articles: [
                 {

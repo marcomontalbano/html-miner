@@ -1,5 +1,5 @@
 {
-    "extends": "../.eslintrc.json",
+    "extends": "../.jshintrc",
     "globals": {
         "xdescribe": true,
         "describe": true,

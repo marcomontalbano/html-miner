@@ -1,0 +1,10 @@
+{
+    "eqnull": true,
+    "laxbreak": true,
+    "laxcomma": true,
+    "proto": true,
+    "undef": true,
+    "unused": true,
+    "node": true,
+    "quotmark": "single"
+}

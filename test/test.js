@@ -269,11 +269,6 @@ describe('htmlMiner', function() {
 
         it('test \'_container_\'', function() {
             var actual = htmlMiner(html, {
-                title: 'h1',
-                headings: 'h2',
-                articlesLength : function(arg) {
-                    return arg.$scope.find('.col-md-4').length;
-                },
                 footer: {
                     _container_: 'footer',
                     copyright: function(arg) { return arg.$scope.text().trim(); },
@@ -285,9 +280,6 @@ describe('htmlMiner', function() {
             });
 
             assert.deepEqual(actual, {
-                title: 'Hello, world!',
-                headings: ['Heading', 'Heading', 'Heading'],
-                articlesLength: 3,
                 footer: {
                     copyright: '© Company 2017',
                     year: 2017,

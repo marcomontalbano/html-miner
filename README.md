@@ -118,7 +118,7 @@ A `function` accepts only one argument that is an `object` containing:
     //=> Hello Marco!
     ```
 
-- `$scope`: useful when combined with `_each_` (read [item list](#item-list) paragraph).
+- `$scope`: useful when combined with `_each_` (read [special keys](#special-keys) paragraph).
 
     ```js
     htmlMiner(html, {
@@ -162,7 +162,7 @@ A `function` accepts only one argument that is an `object` containing:
     //   }
     ```
 
-- `scopeData`: similar to `globalData`, but only contains scope data. Useful when combined with `_each_` (read [item list](#item-list) paragraph).
+- `scopeData`: similar to `globalData`, but only contains scope data. Useful when combined with `_each_` (read [special keys](#special-keys) paragraph).
 
     ```js
     htmlMiner(html, {
@@ -187,9 +187,33 @@ A `function` accepts only one argument that is an `object` containing:
     ```
 
 
-### Item list
+### Special keys
 
-When selector is an `object`, you can use `_each_` as key if you want to create a list of items.
+When selector is an `object`, you can use _special keys_: 
+
+- `_each_`: creates a list of items. HTML Miner will iterate for the value e will parse siblings keys.
+
+    ```js
+    {
+        articles: {
+            _each_: '.articles .article',
+            title: 'h2',
+            content: 'p',
+        }
+    }
+    ```
+
+- `_container_`: uses the parsed value as container. HTML Miner will parse siblings keys, searching them inside the \_container\_.
+
+    ```js
+    {
+        footer: {
+            _container_: 'footer',
+            copyright: (arg) => { return arg.$scope.text().trim(); },
+            company: 'span' // find only 'span' inside 'footer'.
+        }
+    }
+    ```
 
 For more details see the following [example](#lets-try-this-out).
 
@@ -199,7 +223,7 @@ For more details see the following [example](#lets-try-this-out).
 Consider the following html snippet: we will try and fetch some information.
 
 ```html
-<h1>Hello, world!</h1>
+<h1>Hello, <span>world</span>!</h1>
 <div class="articles">
     <div class="article">
         <h2>Heading 1</h2>
@@ -223,16 +247,18 @@ Consider the following html snippet: we will try and fetch some information.
 const htmlMiner = require('html-miner');
 
 let json = htmlMiner(html, {
-    title: "h1",
-    h2: "h2",
+    title: 'h1',
+    who: 'h1 span',
+    h2: 'h2',
     articles: {
         _each_: '.articles .article',
         title: 'h2',
         content: 'p',
     },
     footer: {
-        copyright: 'footer',
-        company: 'footer span',
+        _container_: 'footer',
+        copyright: (arg) => { return arg.$scope.text().trim(); },
+        company: 'span',
         year: (arg) => { return arg.scopeData.copyright.match(/[0-9]+/)[0]; },
     },
     greet: () => { return 'Hi!'; }
@@ -242,6 +268,7 @@ console.log( json );
 
 //=> {
 //     title: 'Hello, world!',
+//     who: 'world',
 //     h2: ['Heading 1', 'Heading 2', 'Heading 3'],
 //     articles: [
 //         {
