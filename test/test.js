@@ -29,6 +29,26 @@ describe('htmlMiner', function() {
             assert.throws(function() { htmlMiner(html, true); });
         });
 
+        it('when \'selector\' for a special key is not a string or function', function() {
+            assert.throws(function() {
+                htmlMiner(html, {
+                    footer: {
+                        _container_: {
+                            something: 1
+                        }
+                    }
+                });
+            });
+
+            assert.throws(function() {
+                htmlMiner(html, {
+                    footer: {
+                        _container_: [1]
+                    }
+                });
+            });
+        });
+
     });
 
 
@@ -288,7 +308,7 @@ describe('htmlMiner', function() {
             });
         });
 
-        xit('\'_container_\' should work also with a function as value', function() {
+        it('\'_container_\' should work also with a function as value', function() {
             var actual = htmlMiner(html, {
                 footer: {
                     _container_: function(arg) { return arg.$('footer'); },
@@ -333,7 +353,12 @@ describe('htmlMiner', function() {
                 $scopeH2: function(arg) { return arg.$scope.find('h2').text(); },
                 length: function(arg) { return arg.scopeData.text.length; },
                 scopeMessage: function(arg) { return arg.scopeData.subtitle; },
-                globalMessage: function(arg) { return arg.globalData.subtitle; }
+                globalMessage: function(arg) { return arg.globalData.subtitle; },
+                links: {
+                    _each_: 'a',
+                    text: function(arg) { return arg.$scope.text().trim(); },
+                    href: function(arg) { return arg.$scope.attr('href'); }
+                }
             }
         });
 
@@ -361,7 +386,11 @@ describe('htmlMiner', function() {
                     $scopeH2: 'Heading',
                     $document: 'Hello, world!',
                     scopeMessage: undefined,
-                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.'
+                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
+                    links: [{
+                        text: 'View details »',
+                        href: '#',
+                    }]
                 },
                 {
                     title: 'Heading',
@@ -371,7 +400,11 @@ describe('htmlMiner', function() {
                     $scopeH2: 'Heading',
                     $document: 'Hello, world!',
                     scopeMessage: undefined,
-                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.'
+                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
+                    links: [{
+                        text: 'Save settings »',
+                        href: '#',
+                    }]
                 },
                 {
                     title: 'Heading',
@@ -381,7 +414,11 @@ describe('htmlMiner', function() {
                     $scopeH2: 'Heading',
                     $document: 'Hello, world!',
                     scopeMessage: undefined,
-                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.'
+                    globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
+                    links: [{
+                        text: 'View details »',
+                        href: '#',
+                    }]
                 }
             ]
         });
