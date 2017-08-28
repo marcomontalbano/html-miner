@@ -203,7 +203,7 @@ When selector is an `object`, you can use _special keys_:
     }
     ```
 
-- `_container_`: uses the parsed value as container. HTML Miner will parse siblings keys, searching them inside the \_container\_.
+- `_container_`: uses the parsed value as container. HTML Miner will parse siblings keys, searching them inside the _container_.
 
     ```js
     {

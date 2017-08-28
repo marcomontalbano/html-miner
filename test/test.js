@@ -224,7 +224,7 @@ describe('htmlMiner', function() {
 
     });
 
-    describe('manipulators', function() {
+    describe('special keys', function() {
 
         it('test \'_each_\'', function() {
             var actual = htmlMiner(html, {
@@ -271,6 +271,27 @@ describe('htmlMiner', function() {
             var actual = htmlMiner(html, {
                 footer: {
                     _container_: 'footer',
+                    copyright: function(arg) { return arg.$scope.text().trim(); },
+                    year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); },
+                    isFooter: function(arg) {
+                        return arg.$scope.is('footer');
+                    }
+                }
+            });
+
+            assert.deepEqual(actual, {
+                footer: {
+                    copyright: '© Company 2017',
+                    year: 2017,
+                    isFooter: true
+                }
+            });
+        });
+
+        xit('\'_container_\' should work also with a function as value', function() {
+            var actual = htmlMiner(html, {
+                footer: {
+                    _container_: function(arg) { return arg.$('footer'); },
                     copyright: function(arg) { return arg.$scope.text().trim(); },
                     year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); },
                     isFooter: function(arg) {
