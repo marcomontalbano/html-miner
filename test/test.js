@@ -57,7 +57,7 @@ describe('htmlMiner', function() {
 
         it('given an inexistent tag name (e.g. \'foo\')', function() {
             var actual = htmlMiner(html, 'foo');
-            assert.equal(actual, undefined);
+            assert.strictEqual(actual, undefined);
         });
 
     });
@@ -67,12 +67,12 @@ describe('htmlMiner', function() {
 
         it('given a string (e.g. \'h1\')', function() {
             var actual = htmlMiner(html, 'h1');
-            assert.equal(actual, 'Hello, world!');
+            assert.strictEqual(actual, 'Hello, world!');
         });
 
         it('given a string (e.g. \'.nav-item.active > a\')', function() {
             var actual = htmlMiner(html, '.nav-item.active > a');
-            assert.equal(actual, 'Home (current)');
+            assert.strictEqual(actual, 'Home (current)');
         });
 
         it('given a function', function() {
@@ -236,7 +236,6 @@ describe('htmlMiner', function() {
                 titleLength: 13,
                 sublist: {
                     subtitle: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
-                    titleLength: undefined,
                     subtitleLength: 214
                 }
             });
@@ -250,6 +249,12 @@ describe('htmlMiner', function() {
             var actual = htmlMiner(html, {
                 title: 'h1',
                 headings: 'h2',
+                scrips: {
+                    _each_: 'script',
+                    src: function(arg) {
+                        return arg.$scope.attr('src');
+                    },
+                },
                 articlesLength : function(arg) {
                     return arg.$scope.find('.col-md-4').length;
                 },
@@ -266,6 +271,12 @@ describe('htmlMiner', function() {
             assert.deepEqual(actual, {
                 title: 'Hello, world!',
                 headings: ['Heading', 'Heading', 'Heading'],
+                scrips: [
+                    { src: 'https://code.jquery.com/jquery-3.2.1.slim.min.js' },
+                    { src: 'http://getbootstrap.com/assets/js/vendor/popper.min.js' },
+                    { src: 'http://getbootstrap.com/dist/js/bootstrap.min.js' },
+                    { src: 'http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js' }
+                ],
                 articlesLength: 3,
                 articles: [
                     {
@@ -385,7 +396,6 @@ describe('htmlMiner', function() {
                     $scopeH1: '',
                     $scopeH2: 'Heading',
                     $document: 'Hello, world!',
-                    scopeMessage: undefined,
                     globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
                     links: [{
                         text: 'View details »',
@@ -399,7 +409,6 @@ describe('htmlMiner', function() {
                     $scopeH1: '',
                     $scopeH2: 'Heading',
                     $document: 'Hello, world!',
-                    scopeMessage: undefined,
                     globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
                     links: [{
                         text: 'Save settings »',
@@ -413,7 +422,6 @@ describe('htmlMiner', function() {
                     $scopeH1: '',
                     $scopeH2: 'Heading',
                     $document: 'Hello, world!',
-                    scopeMessage: undefined,
                     globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
                     links: [{
                         text: 'View details »',

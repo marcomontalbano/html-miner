@@ -157,8 +157,7 @@ describe('htmlMiner • README.md', function() {
             assert.deepEqual(actual, {
                 title: 'Hello Marco!',
                 spanList: [{
-                    pageTitle: 'Hello Marco!',
-                    isUndefined: undefined
+                    pageTitle: 'Hello Marco!'
                 }],
                 who: 'Marco'
             });
@@ -183,8 +182,7 @@ describe('htmlMiner • README.md', function() {
                 upper: 'HELLO MARCO!',
                 sublist: {
                     who: 'Marco',
-                    upper: 'MARCO',
-                    isUndefined: undefined
+                    upper: 'MARCO'
                 }
             });
         });
