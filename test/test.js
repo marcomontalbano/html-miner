@@ -55,6 +55,26 @@ describe('htmlMiner', function() {
     //
     describe('should returns an undefined', function() {
 
+        it('given an incorrect html (e.g. \'undefined\')', function() {
+            var actual = htmlMiner(undefined, 'div');
+            assert.strictEqual(actual, undefined);
+        });
+
+        it('given an incorrect html (e.g. \'null\')', function() {
+            var actual = htmlMiner(null, 'div');
+            assert.strictEqual(actual, undefined);
+        });
+
+        it('given an incorrect html (e.g. \'{}\')', function() {
+            var actual = htmlMiner({}, 'div');
+            assert.strictEqual(actual, undefined);
+        });
+
+        it('given an incorrect html (e.g. \'[]\')', function() {
+            var actual = htmlMiner([], 'div');
+            assert.strictEqual(actual, undefined);
+        });
+
         it('given an inexistent tag name (e.g. \'foo\')', function() {
             var actual = htmlMiner(html, 'foo');
             assert.strictEqual(actual, undefined);
