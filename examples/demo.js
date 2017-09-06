@@ -16,7 +16,7 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', func
             _each_: 'script',
             src: function(arg) {
                 return arg.$scope.attr('src');
-            },
+            }
             //code: function(arg) {
             //    return arg.$scope.text();
             //},
@@ -27,7 +27,7 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', func
             links: {
                 _each_: '.nav-item:not(.dropdown) a',
                 text: function(arg) { return arg.$scope.text(); },
-                href: function(arg) { return arg.$scope.attr('href'); },
+                href: function(arg) { return arg.$scope.attr('href'); }
             }
         },
         jumbotron : {
@@ -37,8 +37,8 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', func
             button   : {
                 _container_: 'a.btn',
                 text: function(arg) { return arg.$scope.text(); },
-                href: function(arg) { return arg.$scope.attr('href'); },
-            },
+                href: function(arg) { return arg.$scope.attr('href'); }
+            }
         },
         articles : {
             _each_ : '.col-md-4',
@@ -47,12 +47,12 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', func
             button   : {
                 _container_: 'a.btn',
                 text: function(arg) { return arg.$scope.text(); },
-                href: function(arg) { return arg.$scope.attr('href'); },
-            },
+                href: function(arg) { return arg.$scope.attr('href'); }
+            }
         },
         footer: {
             copyright: 'footer',
-            year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); }
+            year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0], 10); }
         }
     });
 
