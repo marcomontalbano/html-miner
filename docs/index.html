@@ -21,10 +21,20 @@
     </head>
     <body>
         <nav>
-            <img src="favicons/android-chrome-512x512.png" /> <span>HTML Miner</span>
-            <input type="url" />
+            <a href=""><img src="favicons/android-chrome-512x512.png" /><h1>HTML Miner</h1></a>
             <ul>
                 <li id="actionRun"><i class="fa fa-play" aria-hidden="true"></i> Run</li>
+                <!--<li>
+                    <input id="actionUrl" type="url" placeholder="https://marcomontalbano.com" />
+                </li>-->
+                <li>
+                    <select id="actionSelection">
+                        <option value="0">empty</option>
+                        <option value="1" selected>EXAMPLE: HTML Miner • Simply Selector</option>
+                        <option value="2">EXAMPLE: HTML Miner • Complex Selector</option>
+                        <option value="3">EXAMPLE: Jumbotron Template for Bootstrap</option>
+                    </select>
+                </li>
             </ul>
         </nav>
         <div class="editor--container">
@@ -37,6 +47,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/xml/xml.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/htmlmixed/htmlmixed.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.30.0/mode/javascript/javascript.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.7.4/beautify.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.7.4/beautify-css.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.7.4/beautify-html.min.js"></script>
         <script src="app.min.js"></script>
     </body>
 </html>

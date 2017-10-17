@@ -10,6 +10,8 @@ engines:
       - javascript
       - python
       - php
+    exclude_paths:
+      - test/
   eslint:
     enabled: true
   fixme:
@@ -25,5 +27,4 @@ ratings:
   - "**.rb"
 exclude_paths:
 - node_modules/
-- test/
 - docs/

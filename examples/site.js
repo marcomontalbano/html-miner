@@ -2,7 +2,6 @@
 
 var htmlMiner = require('../lib/');
 
-var _ = require('lodash');
 var url = require('url');
 var https = require('https');
 
@@ -35,7 +34,7 @@ var simpleRequest = function(_url, _method, _callback) {
 
 };
 
-simpleRequest('https://marcomontalbano.com', 'GET', function(html, _options) {
+simpleRequest('https://marcomontalbano.com', 'GET', function(html) {
 
     var json = htmlMiner(html, {
         title: 'h1',
@@ -49,7 +48,7 @@ simpleRequest('https://marcomontalbano.com', 'GET', function(html, _options) {
             title: '.content .title',
             description: '.content .description',
             ribbon: '.ribbon',
-            image: function(arg) { return _.trimEnd(_options.href, '/') + arg.$scope.find('img').attr('src'); }
+            image: function(arg) { return arg.globalData.links[0].href + arg.$scope.find('img').attr('src'); }
         }
     });
 

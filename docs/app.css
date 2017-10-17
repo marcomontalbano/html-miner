@@ -54,32 +54,61 @@ nav img {
     height: 60%;
     vertical-align: middle;
     margin-top: -8px;
-    margin-right: 4px;
+    margin-right: 12px;
 }
 
-nav img, nav span {
+nav > a {
     /*display: none;*/
 }
 
+nav h1 {
+    margin: 0;
+    font-size: inherit;
+    display: inline;
+    font-weight: normal;
+}
+
 nav input[type=url] {
-    display: none;
-    border: 1px solid #d0e2ed;
-    background-color: #f6f9fd;
-    height: 30px;
     vertical-align: middle;
     margin-left: 15px;
     padding: 0 10px;
     color: #0077a9;
-    width: 100%;
-    max-width: 50vw;
+    border: 0;
+    outline: none !important;
+    height: 55px;
+    box-sizing: border-box;
+    line-height: 55px;
+    margin: 0;
+    background: none;
+    width: 50vw;
+}
+nav select {
+    width: 50vw;
+    -webkit-appearance: none;
+    border: 0;
+    height: 50px;
+    background: no-repeat;
+    outline: none !important;
+    color: #0077a8;
+    font-size: inherit;
 }
 
 nav ul {
-    float: right;
+    display: inline-block;
     line-height: 55px;
     margin: 0;
     font-size: 14px;
     color: #0077a9;
+    vertical-align: bottom;
+    padding-left: 30px;
+}
+
+nav > a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+    height: 100%;
+    padding: 0 4px;
 }
 
 nav ul li {
@@ -90,6 +119,7 @@ nav ul li {
     border: 0 solid transparent;
     cursor: pointer;
     transition: border .3s;
+    display: inline-block;
 }
 
 nav ul li:hover {
@@ -140,6 +170,7 @@ body {
     position: relative;
     font-size: initial;
     height: 50%;
+    vertical-align: top;
     border: 1px solid #d0e2ed;
 }
 
