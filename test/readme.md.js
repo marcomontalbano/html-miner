@@ -5,14 +5,15 @@ var htmlMiner = require('../lib/');
 var chai = require('chai');
 var assert = chai.assert;
 var fs = require('fs');
+var path = require('path');
 
-describe('htmlMiner • README.md', function() {
+describe('htmlMiner • README.md', function() {
 
     var exampleHTML;
     var html = '<div class="title">Hello <span>Marco</span>!</div>';
 
     before(function(done) {
-        fs.readFile(__dirname + '/html/readme.md.html', 'utf8', function(err, data) {
+        fs.readFile(path.join(__dirname, '/html/readme.md.html'), 'utf8', function(err, data) {
             if (err) { done(err); }
             exampleHTML = data;
             done();
@@ -28,13 +29,13 @@ describe('htmlMiner • README.md', function() {
             articles: {
                 _each_: '.articles .article',
                 title: 'h2',
-                content: 'p',
+                content: 'p'
             },
             footer: {
                 _container_: 'footer',
                 copyright: function(arg) { return arg.$scope.text().trim(); },
                 company: 'span',
-                year: function(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; },
+                year: function(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; }
             },
             greet: function() { return 'Hi!'; }
         });
@@ -45,15 +46,15 @@ describe('htmlMiner • README.md', function() {
             articles: [
                 {
                     title: 'Heading 1',
-                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
                 },
                 {
                     title: 'Heading 2',
-                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.',
+                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.'
                 },
                 {
                     title: 'Heading 3',
-                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.',
+                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.'
                 }
             ],
             footer: {
@@ -65,22 +66,22 @@ describe('htmlMiner • README.md', function() {
         });
     });
 
-    it('usage • string', function() {
+    it('usage • string', function() {
         var actual = htmlMiner(html, '.title');
         assert.equal(actual, 'Hello Marco!');
     });
 
-    it('usage • function', function() {
+    it('usage • function', function() {
         var actual = htmlMiner(html, function() { return 'Hello everyone!'; });
         assert.equal(actual, 'Hello everyone!');
     });
 
-    it('usage • array', function() {
+    it('usage • array', function() {
         var actual = htmlMiner(html, ['.title', 'span']);
         assert.deepEqual(actual, ['Hello Marco!', 'Marco']);
     });
 
-    it('usage • object', function() {
+    it('usage • object', function() {
         var actual = htmlMiner(html, {
             title: '.title',
             who: 'span'
@@ -92,7 +93,7 @@ describe('htmlMiner • README.md', function() {
         });
     });
 
-    it('usage • combined', function() {
+    it('usage • combined', function() {
         var actual = htmlMiner(html, {
             title: '.title',
             who: '.title span',
@@ -106,7 +107,7 @@ describe('htmlMiner • README.md', function() {
         });
     });
 
-    describe('usage • function in detail', function() {
+    describe('usage • function in detail', function() {
 
         it('- use of `$`', function() {
             var actual = htmlMiner(html, function(arg) {
@@ -126,7 +127,7 @@ describe('htmlMiner • README.md', function() {
                     },
                     isUndefined: function(arg) {
                         return arg.$scope.find('.title').length;
-                    },
+                    }
                 }
             });
 
@@ -174,7 +175,7 @@ describe('htmlMiner • README.md', function() {
                     },
                     isUndefined: function(arg) {
                         return arg.scopeData.title;
-                    },
+                    }
                 }
             });
             assert.deepEqual(actual, {

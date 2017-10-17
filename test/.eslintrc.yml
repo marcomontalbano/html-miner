@@ -1,0 +1,7 @@
+---
+globals:
+  xdescribe: true
+  describe: true
+  it: true
+  xit: true
+  before: true

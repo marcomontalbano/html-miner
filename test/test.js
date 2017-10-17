@@ -5,13 +5,14 @@ var htmlMiner = require('../lib/');
 var chai = require('chai');
 var assert = chai.assert;
 var fs = require('fs');
+var path = require('path');
 
 describe('htmlMiner', function() {
 
     var html;
 
     before(function(done) {
-        fs.readFile(__dirname + '/html/getbootstrap.html', 'utf8', function(err, data) {
+        fs.readFile(path.join(__dirname, '/html/getbootstrap.html'), 'utf8', function(err, data) {
             if (err) { done(err); }
             html = data;
             done();
@@ -174,7 +175,7 @@ describe('htmlMiner', function() {
 
         it('should execute the defined callback', function() {
             var actual = htmlMiner(html, {
-                greet: function() { return 'Hello, world!'; },
+                greet: function() { return 'Hello, world!'; }
             });
 
             assert.deepEqual(actual, {
@@ -186,7 +187,7 @@ describe('htmlMiner', function() {
             var actual = htmlMiner(html, {
                 title: function(arg) {
                     return arg.$('h1').text();
-                },
+                }
             });
             
             assert.deepEqual(actual, {
@@ -203,7 +204,7 @@ describe('htmlMiner', function() {
                 sublist: {
                     lang: function(arg) {
                         return arg.$scope.find('html').attr('lang');
-                    },
+                    }
                 }
             });
 
@@ -223,7 +224,7 @@ describe('htmlMiner', function() {
                     uppertitle: function(arg) {
                         return arg.globalData.title.toUpperCase();
                     }
-                },
+                }
             });
 
             assert.deepEqual(actual, {
@@ -273,7 +274,7 @@ describe('htmlMiner', function() {
                     _each_: 'script',
                     src: function(arg) {
                         return arg.$scope.attr('src');
-                    },
+                    }
                 },
                 articlesLength : function(arg) {
                     return arg.$scope.find('.col-md-4').length;
@@ -323,7 +324,7 @@ describe('htmlMiner', function() {
                 footer: {
                     _container_: 'footer',
                     copyright: function(arg) { return arg.$scope.text().trim(); },
-                    year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); },
+                    year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0], 10); },
                     isFooter: function(arg) {
                         return arg.$scope.is('footer');
                     }
@@ -344,7 +345,7 @@ describe('htmlMiner', function() {
                 footer: {
                     _container_: function(arg) { return arg.$('footer'); },
                     copyright: function(arg) { return arg.$scope.text().trim(); },
-                    year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0]); },
+                    year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0], 10); },
                     isFooter: function(arg) {
                         return arg.$scope.is('footer');
                     }
@@ -419,7 +420,7 @@ describe('htmlMiner', function() {
                     globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
                     links: [{
                         text: 'View details »',
-                        href: '#',
+                        href: '#'
                     }]
                 },
                 {
@@ -432,7 +433,7 @@ describe('htmlMiner', function() {
                     globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
                     links: [{
                         text: 'Save settings »',
-                        href: '#',
+                        href: '#'
                     }]
                 },
                 {
@@ -445,7 +446,7 @@ describe('htmlMiner', function() {
                     globalMessage: 'This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.',
                     links: [{
                         text: 'View details »',
-                        href: '#',
+                        href: '#'
                     }]
                 }
             ]
