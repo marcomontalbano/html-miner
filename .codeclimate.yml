@@ -1,0 +1,3 @@
+# https://docs.codeclimate.com/v1.0/docs/excluding-files-and-folders
+exclude_paths:
+- "docs/"
