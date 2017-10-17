@@ -13,7 +13,8 @@
   "scripts": {
     "lint": "jshint lib/ test/ examples/",
     "test": "npm run lint && mocha --recursive",
-    "watch": "npm run lint && mocha --recursive --reporter dot watch || true"
+    "watch": "npm run lint && mocha --recursive --reporter dot watch || true",
+    "gh-pages": "browserify docs/app.js -o docs/app.min.js"
   },
   "keywords": [
     "node",
@@ -30,8 +31,10 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "browserify": "^14.4.0",
     "chai": "^4.1.2",
     "jshint": "^2.9.5",
-    "mocha": "^3.5.3"
+    "mocha": "^3.5.3",
+    "rest": "^2.0.0"
   }
 }

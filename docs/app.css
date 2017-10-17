@@ -1,0 +1,177 @@
+* {
+    box-sizing: border-box;
+}
+
+.cm-s-default .cm-attribute {
+    color: #07a;
+}
+
+.cm-s-default .cm-tag,
+.cm-s-default .cm-number {
+    color: #905;
+}
+
+.cm-s-default .cm-property {
+    color: #dd4a68;
+}
+
+.cm-s-default .cm-string,
+.cm-s-default .cm-string.cm-property {
+    color: #690;
+}
+
+.cm-s-default .cm-comment {
+    color: #708090;
+}
+
+.cm-s-default .cm-keyword {
+    color: #07a;
+}
+
+.cm-s-default .cm-def {
+    color: #044765;
+}
+
+.cm-s-default .cm-variable {
+    color: #000;
+}
+
+/***********************/
+
+nav {
+    font-size: 24px;
+    font-family: sans-serif;
+    color: #907b60;
+    line-height: 55px;
+    padding: 0 15px;
+    width: 100%;
+    height: 55px;
+    background-color: #eff5fa;
+    cursor: default;
+}
+
+nav img {
+    height: 60%;
+    vertical-align: middle;
+    margin-top: -8px;
+    margin-right: 4px;
+}
+
+nav img, nav span {
+    /*display: none;*/
+}
+
+nav input[type=url] {
+    display: none;
+    border: 1px solid #d0e2ed;
+    background-color: #f6f9fd;
+    height: 30px;
+    vertical-align: middle;
+    margin-left: 15px;
+    padding: 0 10px;
+    color: #0077a9;
+    width: 100%;
+    max-width: 50vw;
+}
+
+nav ul {
+    float: right;
+    line-height: 55px;
+    margin: 0;
+    font-size: 14px;
+    color: #0077a9;
+}
+
+nav ul li {
+    list-style: none;
+    padding: 0 12px;
+    line-height: 55px;
+    height: 55px;
+    border: 0 solid transparent;
+    cursor: pointer;
+    transition: border .3s;
+}
+
+nav ul li:hover {
+    border-color: #0077a9;
+    border-width: 0 0px 2px 0;
+}
+
+nav ul li i {
+    margin-right: 4px;
+}
+
+
+/***********************/
+
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+.CodeMirror {
+    height: 100%;
+}
+
+#JSONEditor-input, #JSONEditor-output {
+    width: 50%;
+    display: inline-block;
+}
+
+#JSONEditor-input .CodeMirror-code, #JSONEditor-output .CodeMirror-code {
+    color: #999;
+}
+
+#JSONEditor-output .CodeMirror-code {
+    cursor: default;
+}
+
+.editor--container {
+    font-size: 0;
+    width: 100%;
+    height: calc(100vh - 55px);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.editor--element {
+    position: relative;
+    font-size: initial;
+    height: 50%;
+    border: 1px solid #d0e2ed;
+}
+
+.editor--element:after {
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #d0e2ed;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    padding: 0 10px;
+    font-family: sans-serif;
+    z-index: 4;
+    opacity: .8;
+}
+#HTMLEditor:after {
+    content: "html";
+}
+#JSONEditor-input:after {
+    content: "selector";
+}
+#JSONEditor-output:after {
+    content: "htmlMiner(html, selector)";
+}
+
+.fa-spinner.fa-pulse {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    color: #606060;
+}

@@ -7,3 +7,6 @@
 # node.js
 /node_modules
 /coverage
+
+# gh-pages
+#/docs/app.min.js
