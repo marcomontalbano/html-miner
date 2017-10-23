@@ -3,7 +3,7 @@ module.exports = [
         url: '',
         selector: ''
     },
-    {   name: 'HTML Miner • Simply Selector',
+    {   name: 'HTML Miner • Simple Selector',
         url: location.href,
         selector: {
           title: 'h1',
