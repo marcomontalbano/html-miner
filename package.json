@@ -14,7 +14,8 @@
     "lint": "jshint lib/ test/ examples/",
     "test": "npm run lint && istanbul cover _mocha -- --recursive",
     "watch": "npm run lint && mocha --recursive --reporter dot watch || true",
-    "gh-pages": "browserify docs/app.js -o docs/app.min.js"
+    "gh-pages": "npm test && browserify docs/app.js -o docs/app.min.js",
+    "start": "serve -n -o docs/"
   },
   "keywords": [
     "node",
@@ -37,6 +38,7 @@
     "jshint": "^2.9.5",
     "mocha": "^3.5.3",
     "mocha-lcov-reporter": "^1.3.0",
-    "rest": "^2.0.0"
+    "rest": "^2.0.0",
+    "serve": "^6.4.9"
   }
 }

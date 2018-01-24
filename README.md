@@ -308,4 +308,8 @@ node examples/site.js
 ```sh
 npm install
 npm test
+
+# build and start
+npm run gh-pages
+npm start
 ```

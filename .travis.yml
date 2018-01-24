@@ -1,4 +1,5 @@
 language: node_js
+
 node_js:
   - "0.12"
   - "4"
@@ -6,11 +7,17 @@ node_js:
   - "6"
   - "7"
   - "8"
+
 script:
   - npm test
-after_success:
-  - npm install istanbul mocha-lcov-reporter coveralls codacy-coverage codeclimate-test-reporter
-  - ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --reporter dot
-  - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls || true
-  - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage || true
-  - cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter || true
+
+jobs:
+  include:
+    - stage: deploy
+      node_js: "8"
+      script:
+        - npm install istanbul mocha-lcov-reporter coveralls codacy-coverage codeclimate-test-reporter
+        - ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --reporter dot
+        - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls || true
+        - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage || true
+        - cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter || true
