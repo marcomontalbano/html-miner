@@ -5,6 +5,7 @@ var configuration = require('./configuration');
 var   htmlEditor        = CodeMirror(document.getElementById('HTMLEditor'),        { tabSize: 2, lineNumbers: true, mode: 'htmlmixed' })
     , jsonEditor_input  = CodeMirror(document.getElementById('JSONEditor-input'),  { tabSize: 2, lineNumbers: true, mode: 'javascript' })
     , jsonEditor_output = CodeMirror(document.getElementById('JSONEditor-output'), { tabSize: 2, lineNumbers: true, mode: 'javascript', readOnly: 'nocursor' })
+    , actionUrl         = document.getElementById('actionUrl')
 ;
 
 var convertObjectToString = function(obj)
@@ -24,11 +25,27 @@ var convertObjectToString = function(obj)
     return object_asString;
 };
 
-var actionRunHandler = function() {
+var actionRunHandler = function () {
+    try {
+        if (actionUrl.value !== '') {
+            rest(actionUrl.value).then(function (response) {
+                htmlEditor.setValue(html_beautify(response.entity));
+                actionRun();
+            });
+        } else {
+            actionRun();
+        }
+    } catch (e) {
+        console.error(e);
+        alert(e.message + '.\nOpen console to get more information.');
+    }
+};
+
+var actionRun = function () {
     try {
         var selector = eval('(function() { return ' + jsonEditor_input.getValue() + '; }())');
-        var json     = htmlMiner(htmlEditor.getValue(), selector) || '';
-        jsonEditor_output.setValue( JSON.stringify(json, null, 2) );
+        var json = htmlMiner(htmlEditor.getValue(), selector) || '';
+        jsonEditor_output.setValue(JSON.stringify(json, null, 2));
     } catch (e) {
         console.error(e);
         alert(e.message + '.\nOpen console to get more information.');
@@ -41,13 +58,14 @@ var actionSelectionHandler = function() {
     // empty result
     htmlEditor.setValue( '' );
     jsonEditor_input.setValue('""');
-    actionRunHandler();
+    actionRun();
 
+    actionUrl.value = config.url;
     if ( config.url !== '' ) {
         rest(config.url).then(function(response) {
             htmlEditor.setValue( html_beautify(response.entity) );
             jsonEditor_input.setValue(convertObjectToString(config.selector));
-            actionRunHandler();
+            actionRun();
         });
     }
 };

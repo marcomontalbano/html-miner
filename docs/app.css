@@ -142,10 +142,10 @@ nav input[type=url] {
     line-height: 55px;
     margin: 0;
     background: none;
-    width: 50vw;
+    width: 25vw;
 }
 nav select {
-    width: 50vw;
+    width: 25vw;
     -webkit-appearance: none;
     border: 0;
     height: 50px;
