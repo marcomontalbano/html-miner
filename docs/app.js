@@ -25,19 +25,48 @@ var convertObjectToString = function(obj)
     return object_asString;
 };
 
+var showError = function(show) {
+    var output = document.getElementById('JSONEditor-output');
+    var classList = output.className.split(' ');
+
+    if (show === true) {
+        classList.push('error');
+    } else {
+        for (var i = classList.length - 1; i >= 0; i--) {
+            if (classList[i] === 'error') {
+                classList.splice(i, 1);
+            }
+        }
+    }
+
+    output.className = classList.join(' ');
+}
+
+var throwError = function(e) {
+    if (e) {
+        console.error(e);
+        jsonEditor_output.setValue(JSON.stringify(e, null, 2));
+        showError(true);
+    }
+
+    alert(`${e.message !== undefined ? (e.message + '.\n') : 'Error. '}Open console to get more information.`);
+};
+
 var actionRunHandler = function () {
+    showError(false);
     try {
         if (actionUrl.value !== '') {
             rest(actionUrl.value).then(function (response) {
                 htmlEditor.setValue(html_beautify(response.entity));
                 actionRun();
+            }, function(response) {
+                throwError(response);
             });
         } else {
             actionRun();
         }
     } catch (e) {
-        console.error(e);
-        alert(e.message + '.\nOpen console to get more information.');
+        throwError(e);
     }
 };
 
@@ -47,12 +76,12 @@ var actionRun = function () {
         var json = htmlMiner(htmlEditor.getValue(), selector) || '';
         jsonEditor_output.setValue(JSON.stringify(json, null, 2));
     } catch (e) {
-        console.error(e);
-        alert(e.message + '.\nOpen console to get more information.');
+        throwError(e);
     }
 };
 
 var actionSelectionHandler = function() {
+    showError(false);
     var config = configuration[ parseInt(this.value, 10) ];
 
     // empty result

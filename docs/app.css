@@ -223,6 +223,10 @@ body {
     cursor: default;
 }
 
+#JSONEditor-output.error .CodeMirror {
+    background: #FFEBEE;
+}
+
 .editor--container {
     font-size: 0;
     width: 100%;
