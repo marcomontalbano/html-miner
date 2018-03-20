@@ -1,4 +1,4 @@
-module.exports = [
+window.configuration = [
     {   name: 'empty',
         url: '',
         selector: ''

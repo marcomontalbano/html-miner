@@ -1,6 +1,5 @@
 var rest          = require('rest');
 var htmlMiner     = require('../lib/');
-var configuration = require('./configuration');
 
 var   htmlEditor        = CodeMirror(document.getElementById('HTMLEditor'),        { tabSize: 2, lineNumbers: true, mode: 'htmlmixed' })
     , jsonEditor_input  = CodeMirror(document.getElementById('JSONEditor-input'),  { tabSize: 2, lineNumbers: true, mode: 'javascript' })
@@ -49,7 +48,7 @@ var throwError = function(e) {
         showError(true);
     }
 
-    alert(`${e.message !== undefined ? (e.message + '.\n') : 'Error. '}Open console to get more information.`);
+    alert((e.message !== undefined ? (e.message + '.\n') : 'Error. ') + 'Open console to get more information.');
 };
 
 var actionRunHandler = function () {
