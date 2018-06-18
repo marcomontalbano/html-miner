@@ -10,9 +10,14 @@ node_js:
 script:
   - npm test
 
+stages:
+  - test
+  - name: coverage
+    if: branch = master
+
 jobs:
   include:
-    - stage: deploy
+    - stage: coverage
       node_js: "8"
       script:
         - npm install istanbul mocha-lcov-reporter coveralls codacy-coverage codeclimate-test-reporter
