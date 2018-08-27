@@ -319,6 +319,20 @@ describe('htmlMiner', function() {
             });
         });
 
+        it('\'_each_\' can returns an empty Array', function () {
+            var actual = htmlMiner(html, {
+                articles: {
+                    _each_: '.col-md-30',
+                    title: 'h2',
+                    text: 'p:first-of-type'
+                }
+            });
+
+            assert.deepEqual(actual, {
+                articles: []
+            });
+        });
+
         it('test \'_eachId_\'', function () {
             var actual = htmlMiner(html, {
                 articles: {
