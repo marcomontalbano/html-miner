@@ -41,9 +41,12 @@ fs.readFile(path.join(__dirname, '../test/html/getbootstrap.html'), 'utf8', func
             }
         },
         articles : {
-            _each_ : '.col-md-4',
-            title  : 'h2',
-            text   : 'p:first-of-type',
+            _each_   : '.col-md-4',
+            _eachId_ : function (arg) {
+                return arg.$scope.data('id');
+            },
+            title    : 'h2',
+            text     : 'p:first-of-type',
             button   : {
                 _container_: 'a.btn',
                 text: function(arg) { return arg.$scope.text(); },

@@ -191,12 +191,27 @@ A `function` accepts only one argument that is an `object` containing:
 
 When selector is an `object`, you can use _special keys_: 
 
-- `_each_`: creates a list of items. HTML Miner will iterate for the value e will parse siblings keys.
+- `_each_`: creates a list of items. HTML Miner will iterate for the value and will parse siblings keys.
 
     ```js
     {
         articles: {
             _each_: '.articles .article',
+            title: 'h2',
+            content: 'p',
+        }
+    }
+    ```
+
+- `_eachId_`: useful when combined with `_each_`. Instead of creating an Array, it creates an Object where keys are the result of `_eachId_` function.
+
+    ```js
+    {
+        articles: {
+            _each_: '.articles .article',
+            _eachId_: function(arg) {
+                return arg.$scope.data('id');
+            }
             title: 'h2',
             content: 'p',
         }
@@ -225,15 +240,15 @@ Consider the following html snippet: we will try and fetch some information.
 ```html
 <h1>Hello, <span>world</span>!</h1>
 <div class="articles">
-    <div class="article">
+    <div class="article" data-id="a001">
         <h2>Heading 1</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     </div>
-    <div class="article">
+    <div class="article" data-id="a002">
         <h2>Heading 2</h2>
         <p>Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.</p>
     </div>
-    <div class="article">
+    <div class="article" data-id="a003">
         <h2>Heading 3</h2>
         <p>Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.</p>
     </div>
@@ -250,8 +265,16 @@ let json = htmlMiner(html, {
     title: 'h1',
     who: 'h1 span',
     h2: 'h2',
-    articles: {
+    articlesArray: {
         _each_: '.articles .article',
+        title: 'h2',
+        content: 'p',
+    },
+    articlesObject: {
+        _each_: '.articles .article',
+        _eachId_: function(arg) {
+            return arg.$scope.data('id');
+        },
         title: 'h2',
         content: 'p',
     },
@@ -270,7 +293,7 @@ console.log( json );
 //     title: 'Hello, world!',
 //     who: 'world',
 //     h2: ['Heading 1', 'Heading 2', 'Heading 3'],
-//     articles: [
+//     articlesArray: [
 //         {
 //             title: 'Heading 1',
 //             content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -284,6 +307,20 @@ console.log( json );
 //             content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.',
 //         }
 //     ],
+//     articlesObject: {
+//         'a001': {
+//             title: 'Heading 1',
+//             content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+//         },
+//         'a002': {
+//             title: 'Heading 2',
+//             content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.',
+//         },
+//         'a003': {
+//             title: 'Heading 3',
+//             content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.',
+//         }
+//     },
 //     footer: {
 //         copyright: '© Company 2017',
 //         company: 'Company',

@@ -319,6 +319,32 @@ describe('htmlMiner', function() {
             });
         });
 
+        it('test \'_eachId_\'', function () {
+            var actual = htmlMiner(html, {
+                articles: {
+                    _each_: '.col-md-4',
+                    title: 'h2',
+                    _eachId_: function (arg) {
+                        return arg.$scope.data('id');
+                    }
+                }
+            });
+
+            assert.deepEqual(actual, {
+                articles: {
+                    '1': {
+                        title: 'Heading'
+                    },
+                    '2': {
+                        title: 'Heading'
+                    },
+                    '3': {
+                        title: 'Heading'
+                    }
+                }
+            });
+        });
+
         it('test \'_container_\'', function() {
             var actual = htmlMiner(html, {
                 footer: {

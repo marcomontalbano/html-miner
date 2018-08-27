@@ -26,8 +26,16 @@ describe('htmlMiner • README.md', function() {
             title: 'h1',
             who: 'h1 span',
             h2: 'h2',
-            articles: {
+            articlesArray: {
                 _each_: '.articles .article',
+                title: 'h2',
+                content: 'p'
+            },
+            articlesObject: {
+                _each_: '.articles .article',
+                _eachId_: function (arg) {
+                    return arg.$scope.data('id');
+                },
                 title: 'h2',
                 content: 'p'
             },
@@ -43,7 +51,7 @@ describe('htmlMiner • README.md', function() {
             title: 'Hello, world!',
             who: 'world',
             h2: ['Heading 1', 'Heading 2', 'Heading 3'],
-            articles: [
+            articlesArray: [
                 {
                     title: 'Heading 1',
                     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
@@ -57,6 +65,20 @@ describe('htmlMiner • README.md', function() {
                     content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.'
                 }
             ],
+            articlesObject: {
+                'a001': {
+                    title: 'Heading 1',
+                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                },
+                'a002': {
+                    title: 'Heading 2',
+                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.'
+                },
+                'a003': {
+                    title: 'Heading 3',
+                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.'
+                }
+            },
             footer: {
                 copyright: '© Company 2017',
                 company: 'Company',
