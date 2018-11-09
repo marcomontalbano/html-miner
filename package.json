@@ -1,6 +1,6 @@
 {
   "name": "html-miner",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A powerful miner that will scrape html pages for you. ` HTML Scraper ´",
   "main": "index.js",
   "repository": "https://github.com/marcomontalbano/html-miner.git",
@@ -15,7 +15,7 @@
     "test": "npm run lint && mocha --recursive",
     "watch": "npm run lint && mocha --recursive --reporter dot watch || true",
     "gh-pages": "npm test && browserify docs/app.js | uglifyjs > docs/app.min.js",
-    "start": "npm run gh-pages && serve"
+    "start": "npm run gh-pages && http-server docs/ -o"
   },
   "keywords": [
     "node",
@@ -29,16 +29,16 @@
   },
   "dependencies": {
     "cheerio": "^0.22.0",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
-    "browserify": "^16.2.2",
-    "chai": "^4.1.2",
+    "browserify": "^16.2.3",
+    "chai": "^4.2.0",
     "eslint": "^4.19.1",
+    "http-server": "^0.11.1",
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.3.0",
     "rest": "^2.0.0",
-    "serve": "^9.6.0",
-    "uglify-js": "^3.4.8"
+    "uglify-js": "^3.4.9"
   }
 }
