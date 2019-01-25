@@ -20,8 +20,8 @@ jobs:
     - stage: coverage
       node_js: "8"
       script:
-        - npm install istanbul mocha-lcov-reporter coveralls codacy-coverage codeclimate-test-reporter
-        - ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --reporter dot
+        - npm install coveralls codacy-coverage codeclimate-test-reporter
+        - npm run coverage
         - cat ./coverage/lcov.info | ./node_modules/.bin/coveralls || true
         - cat ./coverage/lcov.info | ./node_modules/.bin/codacy-coverage || true
         - cat ./coverage/lcov.info | ./node_modules/.bin/codeclimate-test-reporter || true

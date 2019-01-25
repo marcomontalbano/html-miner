@@ -13,6 +13,7 @@
   "scripts": {
     "lint": "eslint lib/ test/ examples/",
     "test": "npm run lint && mocha --recursive",
+    "coverage": "nyc --reporter=lcov --reporter=text mocha --recursive --reporter dot",
     "watch": "npm run lint && mocha --recursive --reporter dot watch || true",
     "gh-pages": "npm test && browserify docs/app.js | uglifyjs > docs/app.min.js",
     "start": "npm run gh-pages && http-server docs/ -o"
@@ -37,7 +38,7 @@
     "eslint": "^4.19.1",
     "http-server": "^0.11.1",
     "mocha": "^5.2.0",
-    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "~13.1.0",
     "rest": "^2.0.0",
     "uglify-js": "^3.4.9"
   }
