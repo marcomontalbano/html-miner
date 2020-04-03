@@ -429,7 +429,7 @@ describe('htmlMiner', function() {
 
     });
 
-    xit('should work with complex combination #2', function() {
+    it('should work combining _each_ and _container_', function() {
         var actual = htmlMiner(html, {
             _each_: '.col-md-4',
             p: {
@@ -452,7 +452,8 @@ describe('htmlMiner', function() {
         assert.deepEqual(actual[0], {
             p: [
                 {
-                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.'
+                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.',
+                    button: {}
                 },
                 {
                     text: 'View details »',
