@@ -11,6 +11,7 @@
   },
   "license": "MIT",
   "scripts": {
+    "postinstall": "cp -n debug.js.sample debug.js || true",
     "lint": "eslint lib/ test/ examples/",
     "test": "npm run lint && mocha --recursive",
     "coverage": "nyc --reporter=lcov --reporter=text mocha --recursive --reporter dot",
