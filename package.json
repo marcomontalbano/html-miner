@@ -14,8 +14,8 @@
     "lint": "eslint lib/ test/ examples/",
     "test": "npm run lint && mocha --recursive",
     "coverage": "nyc --reporter=lcov --reporter=text mocha --recursive --reporter dot",
-    "watch": "npm run lint && mocha --recursive --reporter dot watch || true",
-    "gh-pages": "npm test && browserify docs/app.js | uglifyjs > docs/app.min.js",
+    "watch": "npm run lint && mocha --recursive --reporter dot --watch || true",
+    "gh-pages": "browserify docs/app.js | babel -f .babelrc > docs/app.min.js",
     "start": "npm run gh-pages && http-server docs/ -o"
   },
   "keywords": [
@@ -33,13 +33,17 @@
     "lodash": "~4.17.15"
   },
   "devDependencies": {
+    "@babel/cli": "~7.8.4",
+    "@babel/core": "~7.9.0",
+    "@babel/preset-env": "~7.9.0",
+    "babel-eslint": "~10.1.0",
+    "babel-preset-minify": "~0.5.1",
     "browserify": "~16.5.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "http-server": "^0.12.1",
     "mocha": "^7.1.1",
     "nyc": "~15.0.0",
-    "rest": "^2.0.0",
-    "uglify-js": "^3.8.0"
+    "rest": "^2.0.0"
   }
 }

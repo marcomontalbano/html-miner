@@ -266,6 +266,32 @@ describe('htmlMiner', function() {
 
     describe('special keys', function() {
 
+        it('test \'$scope\' inside \'_each_\' ( https://git.io/JvF9O )', function () {
+            var html = `
+                <h3>Title 1</h3>
+                <p>Text 1A</p>
+                <p>Text 1B</p>`;
+
+            var actual = htmlMiner(html, {
+                _each_: 'h3',
+                title: function(arg) {
+                    return arg.$scope.text();
+                },
+                paragraphs: function(arg) {
+                    var paragraphs = arg.$scope.nextUntil('h3').toArray();
+    
+                    return paragraphs.map(function(p) {
+                        return arg.$(p).text();
+                    });
+                }
+            });
+    
+            assert.deepEqual(actual, [{
+                title: 'Title 1',
+                paragraphs: ['Text 1A', 'Text 1B']
+            }]);
+        })
+
         it('test \'_each_\'', function() {
             var actual = htmlMiner(html, {
                 title: 'h1',
@@ -383,7 +409,7 @@ describe('htmlMiner', function() {
         it('\'_container_\' should work also with a function as value', function() {
             var actual = htmlMiner(html, {
                 footer: {
-                    _container_: function(arg) { return arg.$('footer'); },
+                    _container_: function(arg) { return 'footer' },
                     copyright: function(arg) { return arg.$scope.text().trim(); },
                     year: function(arg) { return parseInt(arg.scopeData.copyright.match(/[0-9]+/)[0], 10); },
                     isFooter: function(arg) {
@@ -402,6 +428,43 @@ describe('htmlMiner', function() {
         });
 
     });
+
+    xit('should work with complex combination #2', function() {
+        var actual = htmlMiner(html, {
+            _each_: '.col-md-4',
+            p: {
+                _each_: 'p',
+                text: function(arg) {
+                    return arg.$scope.text().trim();
+                },
+                button: {
+                    _container_: 'a.btn',
+                    text: function(arg) {
+                        return arg.$scope.text().trim();
+                    },
+                    href: function(arg) {
+                        return arg.$scope.attr('href');
+                    }
+                }
+            }
+        })
+
+        assert.deepEqual(actual[0], {
+            p: [
+                {
+                    text: 'Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.'
+                },
+                {
+                    text: 'View details »',
+                    button: {
+                        text: 'View details »',
+                        href: '#'
+                    }
+                }
+            ]
+        })
+    });
+
 
     it('should work with complex combination', function() {
 
@@ -430,6 +493,15 @@ describe('htmlMiner', function() {
                     _each_: 'a',
                     text: function(arg) { return arg.$scope.text().trim(); },
                     href: function(arg) { return arg.$scope.attr('href'); }
+                },
+                button: {
+                    _container_: 'a.btn',
+                    text: function(arg) {
+                        return arg.$scope.text();
+                    },
+                    href: function(arg) {
+                        return arg.$scope.attr('href');
+                    }
                 }
             }
         });
@@ -461,7 +533,11 @@ describe('htmlMiner', function() {
                     links: [{
                         text: 'View details »',
                         href: '#'
-                    }]
+                    }],
+                    button: {
+                        text: 'View details »',
+                        href: '#'
+                    }
                 },
                 {
                     title: 'Heading',
@@ -474,7 +550,11 @@ describe('htmlMiner', function() {
                     links: [{
                         text: 'Save settings »',
                         href: '#'
-                    }]
+                    }],
+                    button: {
+                        text: 'Save settings »',
+                        href: '#'
+                    }
                 },
                 {
                     title: 'Heading',
@@ -487,7 +567,11 @@ describe('htmlMiner', function() {
                     links: [{
                         text: 'View details »',
                         href: '#'
-                    }]
+                    }],
+                    button: {
+                        text: 'View details »',
+                        href: '#'
+                    }
                 }
             ]
         });
