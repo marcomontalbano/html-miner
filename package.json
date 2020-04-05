@@ -12,14 +12,15 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "cp -n debug.js.sample debug.js || true",
-    "lint": "eslint lib/ test/ examples/",
+    "lint": "eslint lib/ test/ examples/ docs/app.js docs/configuration.js",
     "test": "mocha --recursive",
     "posttest": "npm run lint",
     "coverage": "nyc --reporter=lcov --reporter=text mocha --recursive --reporter dot",
     "prewatch": "npm run lint",
     "watch": "mocha --recursive --reporter dot --watch || true",
     "gh-pages": "browserify docs/app.js | babel -f .babelrc > docs/app.min.js",
-    "start": "npm run gh-pages && http-server docs/ -o"
+    "prestart": "npm run gh-pages",
+    "start": "npx serve docs/"
   },
   "keywords": [
     "node",
@@ -41,14 +42,13 @@
     "@babel/preset-env": "~7.9.0",
     "babel-eslint": "~10.1.0",
     "babel-preset-minify": "~0.5.1",
-    "browserify": "~16.5.0",
+    "browserify": "~16.5.1",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "~14.1.0",
     "eslint-plugin-import": "~2.20.2",
-    "http-server": "^0.12.1",
     "mocha": "^7.1.1",
-    "nyc": "~15.0.0",
+    "nyc": "~15.0.1",
     "rest": "^2.0.0"
   }
 }

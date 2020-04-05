@@ -8,9 +8,6 @@
   },
   "globals": {
     "window": true,
-    "document": true,
-    "html_beautify": true,
-    "CodeMirror": true,
-    "js_beautify": true
+    "document": true
   }
 }
