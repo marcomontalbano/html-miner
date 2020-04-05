@@ -20,7 +20,10 @@
     "watch": "mocha --recursive --reporter dot --watch || true",
     "gh-pages": "browserify docs/app.js | babel -f .babelrc > docs/app.min.js",
     "prestart": "npm run gh-pages",
-    "start": "npx serve docs/"
+    "start": "npx serve docs/",
+    "preversion": "npm test",
+    "version": "npm run gh-pages && git add -A docs",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "node",
