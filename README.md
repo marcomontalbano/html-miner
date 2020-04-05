@@ -67,7 +67,12 @@ htmlMiner(htmlWithDivs, 'div');
 Read [function in detail](#function-in-detail) paragraph.
 
 ```js
-htmlMiner(html, () => { return 'Hello everyone!' });
+htmlMiner(html, () => 'Hello everyone!');
+//=> Hello everyone!
+
+htmlMiner(html, function () {
+    return 'Hello everyone!'
+});
 //=> Hello everyone!
 ```
 
@@ -118,7 +123,7 @@ A `function` accepts only one argument that is an `object` containing:
     //=> Hello Marco!
     ```
 
-- `$scope`: useful when combined with `_each_` (read [special keys](#special-keys) paragraph).
+- `$scope`: useful when combined with `_each_` or `_container_` (read [special keys](#special-keys) paragraph).
 
     ```js
     htmlMiner(html, {
@@ -331,7 +336,7 @@ console.log( json );
 
 ```
 
-You can find other examples under the folder `/examples`.
+You can find other examples under the folder `/examples` or you can directly use the [Online Playground](https://marcomontalbano.github.io/html-miner).
 
 ```sh
 # you can test examples with nodejs
@@ -346,7 +351,6 @@ node examples/site.js
 npm install
 npm test
 
-# build and start
-npm run gh-pages
+# start the playground locally
 npm start
 ```
