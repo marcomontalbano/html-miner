@@ -13,9 +13,11 @@
   "scripts": {
     "postinstall": "cp -n debug.js.sample debug.js || true",
     "lint": "eslint lib/ test/ examples/",
-    "test": "npm run lint && mocha --recursive",
+    "test": "mocha --recursive",
+    "posttest": "npm run lint",
     "coverage": "nyc --reporter=lcov --reporter=text mocha --recursive --reporter dot",
-    "watch": "npm run lint && mocha --recursive --reporter dot --watch || true",
+    "prewatch": "npm run lint",
+    "watch": "mocha --recursive --reporter dot --watch || true",
     "gh-pages": "browserify docs/app.js | babel -f .babelrc > docs/app.min.js",
     "start": "npm run gh-pages && http-server docs/ -o"
   },
@@ -42,6 +44,8 @@
     "browserify": "~16.5.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "~14.1.0",
+    "eslint-plugin-import": "~2.20.2",
     "http-server": "^0.12.1",
     "mocha": "^7.1.1",
     "nyc": "~15.0.0",

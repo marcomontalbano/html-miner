@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "*.js.sample": "javascript"
-    }
+    },
+    "editor.rulers": [140]
 }

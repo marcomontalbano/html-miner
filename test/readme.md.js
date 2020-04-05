@@ -1,19 +1,17 @@
-'use strict';
+const chai = require('chai');
 
-var htmlMiner = require('../lib/');
+const { assert } = chai;
+const fs = require('fs');
+const path = require('path');
 
-var chai = require('chai');
-var assert = chai.assert;
-var fs = require('fs');
-var path = require('path');
+const htmlMiner = require('../lib');
 
-describe('htmlMiner • README.md', function() {
+describe('htmlMiner • README.md', () => {
+    let exampleHTML;
+    const html = '<div class="title">Hello <span>Marco</span>!</div>';
 
-    var exampleHTML;
-    var html = '<div class="title">Hello <span>Marco</span>!</div>';
-
-    before(function(done) {
-        fs.readFile(path.join(__dirname, '/html/readme.md.html'), 'utf8', function(err, data) {
+    before((done) => {
+        fs.readFile(path.join(__dirname, '/html/readme.md.html'), 'utf8', (err, data) => {
             if (err) { done(err); }
             exampleHTML = data;
             done();
@@ -21,31 +19,31 @@ describe('htmlMiner • README.md', function() {
     });
 
     //
-    it('the example should work', function() {
-        var actual = htmlMiner(exampleHTML, {
+    it('the example should work', () => {
+        const actual = htmlMiner(exampleHTML, {
             title: 'h1',
             who: 'h1 span',
             h2: 'h2',
             articlesArray: {
                 _each_: '.articles .article',
                 title: 'h2',
-                content: 'p'
+                content: 'p',
             },
             articlesObject: {
                 _each_: '.articles .article',
-                _eachId_: function (arg) {
+                _eachId_(arg) {
                     return arg.$scope.data('id');
                 },
                 title: 'h2',
-                content: 'p'
+                content: 'p',
             },
             footer: {
                 _container_: 'footer',
-                copyright: function(arg) { return arg.$scope.text().trim(); },
+                copyright(arg) { return arg.$scope.text().trim(); },
                 company: 'span',
-                year: function(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; }
+                year(arg) { return arg.scopeData.copyright.match(/[0-9]+/)[0]; },
             },
-            greet: function() { return 'Hi!'; }
+            greet() { return 'Hi!'; },
         });
         assert.deepEqual(actual, {
             title: 'Hello, world!',
@@ -54,162 +52,157 @@ describe('htmlMiner • README.md', function() {
             articlesArray: [
                 {
                     title: 'Heading 1',
-                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                 },
                 {
                     title: 'Heading 2',
-                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.'
+                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.',
                 },
                 {
                     title: 'Heading 3',
-                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.'
-                }
+                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.',
+                },
             ],
             articlesObject: {
-                'a001': {
+                a001: {
                     title: 'Heading 1',
-                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+                    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                 },
-                'a002': {
+                a002: {
                     title: 'Heading 2',
-                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.'
+                    content: 'Donec maximus ipsum quis est tempor, sit amet laoreet libero bibendum.',
                 },
-                'a003': {
+                a003: {
                     title: 'Heading 3',
-                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.'
-                }
+                    content: 'Suspendisse viverra convallis risus, vitae molestie est tincidunt eget.',
+                },
             },
             footer: {
                 copyright: '© Company 2017',
                 company: 'Company',
-                year: '2017'
+                year: '2017',
             },
-            greet: 'Hi!'
+            greet: 'Hi!',
         });
     });
 
-    it('usage • string', function() {
-        var actual = htmlMiner(html, '.title');
+    it('usage • string', () => {
+        const actual = htmlMiner(html, '.title');
         assert.equal(actual, 'Hello Marco!');
     });
 
-    it('usage • function', function() {
-        var actual = htmlMiner(html, function() { return 'Hello everyone!'; });
+    it('usage • function', () => {
+        const actual = htmlMiner(html, () => 'Hello everyone!');
         assert.equal(actual, 'Hello everyone!');
     });
 
-    it('usage • array', function() {
-        var actual = htmlMiner(html, ['.title', 'span']);
+    it('usage • array', () => {
+        const actual = htmlMiner(html, ['.title', 'span']);
         assert.deepEqual(actual, ['Hello Marco!', 'Marco']);
     });
 
-    it('usage • object', function() {
-        var actual = htmlMiner(html, {
+    it('usage • object', () => {
+        const actual = htmlMiner(html, {
             title: '.title',
-            who: 'span'
-        });
-
-        assert.deepEqual(actual, {
-            title: 'Hello Marco!',
-            who: 'Marco'
-        });
-    });
-
-    it('usage • combined', function() {
-        var actual = htmlMiner(html, {
-            title: '.title',
-            who: '.title span',
-            upper: function(arg) { return arg.scopeData.who.toUpperCase(); }
+            who: 'span',
         });
 
         assert.deepEqual(actual, {
             title: 'Hello Marco!',
             who: 'Marco',
-            upper: 'MARCO'
         });
     });
 
-    describe('usage • function in detail', function() {
+    it('usage • combined', () => {
+        const actual = htmlMiner(html, {
+            title: '.title',
+            who: '.title span',
+            upper(arg) { return arg.scopeData.who.toUpperCase(); },
+        });
 
-        it('- use of `$`', function() {
-            var actual = htmlMiner(html, function(arg) {
-                return arg.$('.title').text();
-            });
+        assert.deepEqual(actual, {
+            title: 'Hello Marco!',
+            who: 'Marco',
+            upper: 'MARCO',
+        });
+    });
+
+    describe('usage • function in detail', () => {
+        it('- use of `$`', () => {
+            const actual = htmlMiner(html, (arg) => arg.$('.title').text());
 
             assert.equal(actual, 'Hello Marco!');
         });
 
-        it('- use of `$scope`', function() {
-            var actual = htmlMiner(html, {
+        it('- use of `$scope`', () => {
+            const actual = htmlMiner(html, {
                 title: '.title',
                 spanList: {
                     _each_: 'span',
-                    value: function(arg) {
+                    value(arg) {
                         return arg.$scope.text();
                     },
-                    isUndefined: function(arg) {
+                    isUndefined(arg) {
                         return arg.$scope.find('.title').length;
-                    }
-                }
+                    },
+                },
             });
 
             assert.deepEqual(actual, {
                 title: 'Hello Marco!',
                 spanList: [{
                     value: 'Marco',
-                    isUndefined: 0
-                }]
+                    isUndefined: 0,
+                }],
             });
         });
 
-        it('- use of `globalData`', function() {
-            var actual = htmlMiner(html, {
+        it('- use of `globalData`', () => {
+            const actual = htmlMiner(html, {
                 title: '.title',
                 spanList: {
                     _each_: '.title span',
-                    pageTitle: function(arg) {
+                    pageTitle(arg) {
                         return arg.globalData.title;
                     },
-                    isUndefined: function(arg) {
+                    isUndefined(arg) {
                         return arg.globalData.who;
-                    }
+                    },
                 },
-                who: '.title span'
+                who: '.title span',
             });
 
             assert.deepEqual(actual, {
                 title: 'Hello Marco!',
                 spanList: [{
-                    pageTitle: 'Hello Marco!'
+                    pageTitle: 'Hello Marco!',
                 }],
-                who: 'Marco'
+                who: 'Marco',
             });
         });
 
-        it('- use of `scopeData`', function() {
-            var actual = htmlMiner(html, {
+        it('- use of `scopeData`', () => {
+            const actual = htmlMiner(html, {
                 title: '.title',
-                upper: function(arg) { return arg.scopeData.title.toUpperCase(); },
+                upper(arg) { return arg.scopeData.title.toUpperCase(); },
                 sublist: {
                     who: '.title span',
-                    upper: function(arg) {
+                    upper(arg) {
                         return arg.scopeData.who.toUpperCase();
                     },
-                    isUndefined: function(arg) {
+                    isUndefined(arg) {
                         return arg.scopeData.title;
-                    }
-                }
+                    },
+                },
             });
             assert.deepEqual(actual, {
                 title: 'Hello Marco!',
                 upper: 'HELLO MARCO!',
                 sublist: {
                     who: 'Marco',
-                    upper: 'MARCO'
-                }
+                    upper: 'MARCO',
+                },
             });
         });
-
     });
-
 });

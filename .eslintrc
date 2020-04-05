@@ -1,0 +1,16 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "indent": ["error", 4, { "SwitchCase": 1 }],
+    "max-len": ["error", 140],
+
+    "no-underscore-dangle": "off"
+  },
+  "globals": {
+    "window": true,
+    "document": true,
+    "html_beautify": true,
+    "CodeMirror": true,
+    "js_beautify": true
+  }
+}

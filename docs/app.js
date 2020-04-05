@@ -1,37 +1,38 @@
-var rest          = require('rest');
-var htmlMiner     = require('../lib/');
+/* eslint-disable import/no-extraneous-dependencies */
 
-var   htmlEditor        = CodeMirror(document.getElementById('HTMLEditor'),        { tabSize: 2, lineNumbers: true, mode: 'htmlmixed' })
-    , jsonEditor_input  = CodeMirror(document.getElementById('JSONEditor-input'),  { tabSize: 2, lineNumbers: true, mode: 'javascript' })
-    , jsonEditor_output = CodeMirror(document.getElementById('JSONEditor-output'), { tabSize: 2, lineNumbers: true, mode: 'javascript', readOnly: 'nocursor' })
-    , actionUrl         = document.getElementById('actionUrl')
-;
+const rest = require('rest');
+const htmlMiner = require('../lib');
 
-var convertObjectToString = function(obj)
-{
-    var object_asString = JSON.stringify(obj, function(key, val) {
+const htmlEditor = CodeMirror(document.getElementById('HTMLEditor'), { tabSize: 2, lineNumbers: true, mode: 'htmlmixed' });
+const jsonEditorInput = CodeMirror(document.getElementById('JSONEditor-input'), { tabSize: 2, lineNumbers: true, mode: 'javascript' });
+const jsonEditorOutput = CodeMirror(document.getElementById('JSONEditor-output'), {
+    tabSize: 2, lineNumbers: true, mode: 'javascript', readOnly: 'nocursor',
+});
+const actionUrl = document.getElementById('actionUrl');
+const convertObjectToString = (obj) => {
+    let objectAsString = JSON.stringify(obj, (key, val) => {
         if (typeof val === 'function') {
-            return val + ''; // implicitly `toString` it
+            return `${val}`; // implicitly `toString` it
         }
         return val;
     });
 
-    object_asString = object_asString.replace(/\\n/g, "\n");               // add "break-line"
-    object_asString = object_asString.replace(/\"function/g, "function");  // manage opening functions
-    object_asString = object_asString.replace(/}\"/g, "}");                // manage closing functions
-    object_asString = object_asString.replace(/\"([\w]+)\":/g, '$1:');     // remove double quotes from keys
-    object_asString = js_beautify(object_asString, {indent_size:2});
-    return object_asString;
+    objectAsString = objectAsString.replace(/\\n/g, '\n'); // add "break-line"
+    objectAsString = objectAsString.replace(/"function/g, 'function'); // manage opening functions
+    objectAsString = objectAsString.replace(/}"/g, '}'); // manage closing functions
+    objectAsString = objectAsString.replace(/"([\w]+)":/g, '$1:'); // remove double quotes from keys
+    objectAsString = js_beautify(objectAsString, { indent_size: 2 });
+    return objectAsString;
 };
 
-var showError = function(show) {
-    var output = document.getElementById('JSONEditor-output');
-    var classList = output.className.split(' ');
+const showError = (show) => {
+    const output = document.getElementById('JSONEditor-output');
+    const classList = output.className.split(' ');
 
     if (show === true) {
         classList.push('error');
     } else {
-        for (var i = classList.length - 1; i >= 0; i--) {
+        for (let i = classList.length - 1; i >= 0; i -= 1) {
             if (classList[i] === 'error') {
                 classList.splice(i, 1);
             }
@@ -39,26 +40,37 @@ var showError = function(show) {
     }
 
     output.className = classList.join(' ');
-}
+};
 
-var throwError = function(e) {
+const throwError = (e) => {
     if (e) {
         console.error(e);
-        jsonEditor_output.setValue(JSON.stringify(e, null, 2));
+        jsonEditorOutput.setValue(JSON.stringify(e, null, 2));
         showError(true);
     }
 
-    alert((e.message !== undefined ? (e.message + '.\n') : 'Error. ') + 'Open console to get more information.');
+    alert(`${e.message !== undefined ? (`${e.message}.\n`) : 'Error. '}Open console to get more information.`);
 };
 
-var actionRunHandler = function () {
+const actionRun = () => {
+    try {
+        // eslint-disable-next-line no-eval
+        const selector = eval(`(function() { return ${jsonEditorInput.getValue()}; }())`);
+        const json = htmlMiner(htmlEditor.getValue(), selector) || '';
+        jsonEditorOutput.setValue(JSON.stringify(json, null, 2));
+    } catch (e) {
+        throwError(e);
+    }
+};
+
+const actionRunHandler = () => {
     showError(false);
     try {
         if (actionUrl.value !== '') {
-            rest(actionUrl.value).then(function (response) {
+            rest(actionUrl.value).then((response) => {
                 htmlEditor.setValue(html_beautify(response.entity));
                 actionRun();
-            }, function(response) {
+            }, (response) => {
                 throwError(response);
             });
         } else {
@@ -69,34 +81,24 @@ var actionRunHandler = function () {
     }
 };
 
-var actionRun = function () {
-    try {
-        var selector = eval('(function() { return ' + jsonEditor_input.getValue() + '; }())');
-        var json = htmlMiner(htmlEditor.getValue(), selector) || '';
-        jsonEditor_output.setValue(JSON.stringify(json, null, 2));
-    } catch (e) {
-        throwError(e);
-    }
-};
-
-var actionSelectionHandler = function() {
+function actionSelectionHandler() {
     showError(false);
-    var config = configuration[ parseInt(this.value, 10) ];
+    const config = configuration[parseInt(this.value, 10)];
 
     // empty result
-    htmlEditor.setValue( '' );
-    jsonEditor_input.setValue('""');
+    htmlEditor.setValue('');
+    jsonEditorInput.setValue('""');
     actionRun();
 
     actionUrl.value = config.url;
-    if ( config.url !== '' ) {
-        rest(config.url).then(function(response) {
-            htmlEditor.setValue( html_beautify(response.entity) );
-            jsonEditor_input.setValue(convertObjectToString(config.selector));
+    if (config.url !== '') {
+        rest(config.url).then((response) => {
+            htmlEditor.setValue(html_beautify(response.entity));
+            jsonEditorInput.setValue(convertObjectToString(config.selector));
             actionRun();
         });
     }
-};
+}
 
 document.getElementById('actionRun').addEventListener('click', actionRunHandler);
 document.getElementById('actionSelection').addEventListener('change', actionSelectionHandler);
