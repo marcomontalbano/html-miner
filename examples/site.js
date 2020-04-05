@@ -1,57 +1,49 @@
-'use strict';
 
-var htmlMiner = require('../lib/');
+const url = require('url');
+const https = require('https');
+const htmlMiner = require('../lib');
 
-var url = require('url');
-var https = require('https');
-
-var simpleRequest = function(_url, _method, _callback) {
-
-    var   html    = ''
-        , options = url.parse( _url )
-    ;
-
+const simpleRequest = (_url, _method, _callback) => {
+    let html = '';
+    const options = url.parse(_url);
     options.method = _method || 'GET';
     options.headers = {
-        'User-Agent': 'request'
+        'User-Agent': 'request',
     };
 
-    var req = https.request(options, function(res) {
+    const req = https.request(options, (res) => {
         res.setEncoding('utf8');
-        res.on('data', function(chunk) {
+        res.on('data', (chunk) => {
             html += chunk;
         });
-        res.on('end', function() {
+        res.on('end', () => {
             _callback.apply(this, [html, options]);
         });
     });
 
-    req.on('error', function(e) {
-        process.stdout.write('problem with request: ' + e.message);
+    req.on('error', (e) => {
+        process.stdout.write(`problem with request: ${e.message}`);
     });
 
     req.end();
-
 };
 
-simpleRequest('https://marcomontalbano.com', 'GET', function(html) {
-
-    var json = htmlMiner(html, {
+simpleRequest('https://marcomontalbano.com', 'GET', (html) => {
+    const json = htmlMiner(html, {
         title: 'h1',
         links: {
             _each_: '.nav.navbar-nav li',
             text: 'a',
-            href: function(arg) { return arg.$scope.find('a').attr('href'); }
+            href(arg) { return arg.$scope.find('a').attr('href'); },
         },
         portfolio: {
             _each_: '.portfolio',
             title: '.content .title',
             description: '.content .description',
             ribbon: '.ribbon',
-            image: function(arg) { return arg.globalData.links[0].href + arg.$scope.find('img').attr('src'); }
-        }
+            image(arg) { return arg.globalData.links[0].href + arg.$scope.find('img').attr('src'); },
+        },
     });
 
-    process.stdout.write( JSON.stringify(json) );
-
+    process.stdout.write(JSON.stringify(json));
 });
