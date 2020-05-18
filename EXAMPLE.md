@@ -6,7 +6,7 @@ All examples use `ES2015` syntax.
 
 ## Selector as `function`
 
-The *htmlMiner* `selector` can be difficult to use because as you can read in the README.md, that can assume different shapes.
+The *htmlMiner* `selector` can be difficult to use, because as you can read in the README.md, that can assume different shapes.
 
 One interesting thing is that the `selector` can be also a function, and this is very powerful because you can use the full power of [Cheerio](https://cheerio.js.org/) inside your html.
 
