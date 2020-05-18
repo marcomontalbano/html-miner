@@ -22,6 +22,14 @@ npm i --save html-miner
 yarn add html-miner
 ```
 
+## Example
+
+I decided to collect common use cases inside a dedicated [EXAMPLE.md](./EXAMPLE.md). Feel free to start from **Usage** section or jump directly to **Example** page.
+
+If you want to experiment, an [online playground](https://marcomontalbano.github.io/html-miner) is also available.
+
+
+:green_book: Enjoy your reading
 
 ## Usage
 
@@ -119,7 +127,7 @@ A `function` accepts only one argument that is an `object` containing:
 - `$`: is a jQuery-like function pointing to the document ( html argument ). You can use it to query and fetch elements from the html.
 
     ```js
-    htmlMiner(html, (arg) => { return arg.$('.title').text(); });
+    htmlMiner(html, arg => arg.$('.title').text());
     //=> Hello Marco!
     ```
 
@@ -336,8 +344,7 @@ console.log( json );
 
 ```
 
-You can find other examples under the folder `/examples` or you can directly use the [Online Playground](https://marcomontalbano.github.io/html-miner).
-
+You can find other examples under the folder `/examples`
 ```sh
 # you can test examples with nodejs
 node examples/demo.js
