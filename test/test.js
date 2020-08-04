@@ -1,4 +1,3 @@
-
 const chai = require('chai');
 
 const { assert } = chai;
@@ -48,7 +47,6 @@ describe('htmlMiner', () => {
             });
         });
     });
-
 
     //
     describe('should returns an undefined', () => {
@@ -453,7 +451,6 @@ describe('htmlMiner', () => {
             ],
         });
     });
-
 
     it('should work with complex combination', () => {
         const actual = htmlMiner(html, {

@@ -1,4 +1,3 @@
-
 const url = require('url');
 const https = require('https');
 const htmlMiner = require('../lib');
