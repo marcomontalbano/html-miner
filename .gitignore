@@ -10,6 +10,8 @@
 /.nyc_output
 
 # gh-pages
-#/docs/app.min.js
+/docs/app.min.js.tmp*
 
 /debug.js
+index.browser.min.js
+index.browser.min.js.tmp*

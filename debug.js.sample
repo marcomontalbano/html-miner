@@ -1,4 +1,4 @@
-const htmlMiner = require('./lib')
+const htmlMiner = require('./lib');
 
 const html = `
 <h3>Hello World!</h3>
@@ -6,7 +6,7 @@ const html = `
 
 const selector = 'h3';
 
+// eslint-disable-next-line no-console
 console.log(
-    JSON.stringify(htmlMiner(html, selector), undefined, 2)
+    JSON.stringify(htmlMiner(html, selector), undefined, 2),
 );
-

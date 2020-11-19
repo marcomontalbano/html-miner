@@ -1,0 +1,1 @@
+window.htmlMiner = require('./index');
