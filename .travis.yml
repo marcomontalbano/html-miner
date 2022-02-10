@@ -1,12 +1,9 @@
 language: node_js
 
 node_js:
-  - "8"
-  - "10"
-  - "11"
   - "12"
-  - "13"
   - "14"
+  - "16"
 
 script:
   - npm test
@@ -19,7 +16,7 @@ stages:
 jobs:
   include:
     - stage: coverage
-      node_js: "10"
+      node_js: "16"
       script:
         - npm install coveralls codacy-coverage codeclimate-test-reporter
         - npm run coverage

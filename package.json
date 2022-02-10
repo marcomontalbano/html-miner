@@ -38,7 +38,7 @@
     "scrape-html"
   ],
   "engines": {
-    "node": ">= 8.10"
+    "node": ">= 12"
   },
   "dependencies": {
     "cheerio": "^0.22.0",
