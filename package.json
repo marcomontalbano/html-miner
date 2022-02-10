@@ -28,7 +28,7 @@
     "start": "npx serve docs/",
     "preversion": "npm test",
     "version": "run-s build && git add -A docs",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push --follow-tags"
   },
   "keywords": [
     "node",
